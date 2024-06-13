@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@google-cloud/local-auth": "^2.1.0",
+    "aranha-commons": "^1.0.0",
+    "csvtojson": "^2.0.10",
+    "edit-json-file": "^1.7.0",
+    "googleapis": "^105.0.0",
+    "puppeteer": "^22.8.2"
+  }
+}

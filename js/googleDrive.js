@@ -22,7 +22,7 @@ const CREDENTIALS_PATH = path.join(process.cwd(), "DONT_GIT/credentials.json");
 let authClient;
 //#endregion
 
-let subsJson = editJsonFile(`${__dirname}/json/currentSubs.json`, { ignore_dots: false, });
+let subsJson = editJsonFile(`${__dirname}../DONT_GIT/currentSubs.json`, { ignore_dots: false, });
 let configsJson = editJsonFile(`${__dirname}../DONT_GIT/configs.json`);
 
 //#region GOOGLE METHODS

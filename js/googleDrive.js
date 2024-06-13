@@ -78,7 +78,7 @@ async function ShareFolder(folder_id, email) {
 			sendNotificationEmail: false, // TODO: Notificar somente na primeira vez que o usuário é adicionado.
 			fields: "*",
 		})
-		.catch((err) => console.log(err.errors));
+		.catch((err) => LogThis(colors.red, err.errors));
 	if (res) console.log(`${email} now has access to ${folder_id}`);
 }
 
@@ -177,23 +177,15 @@ function ShareOrUnshareFolderToSubs() {
 		folder_id = GetFolderIdFromSubTier(subInfo.subTier);
 		if (subInfo.status == "Ativa") {
 			activeCount++;
-			console.log(
-				"\x1b[32m" +
-				`Giving access of ${folder_id} to ${subInfo.name} (${subInfo.email}) !\n`
-			);
+			LogThis(colors.green, `Giving access of ${folder_id} to ${subInfo.name} (${subInfo.email}) !\n`);
 			//ShareFolder(folder_id, subInfo.email);
 		} else if (subInfo.status == "Inativa" || subInfo.status == "Cancelada") {
 			inactiveCount++;
-			console.log(
-				"\x1b[31m" +
-				`Removing access of ${folder_id} from ${subInfo.name} (${subInfo.email}) !\n`
-			);
+			LogThis(colors.red, `Removing access of ${folder_id} from ${subInfo.name} (${subInfo.email}) !\n`);
 			//UnshareFolder(folder_id, subInfo.email);
 		} else {
 			otherCount++;
-			console.log(
-				"\x1b[33m" + `!${subInfo.email} has status ${subInfo.status}!\n`
-			);
+			LogThis(colors.yellow, `!${subInfo.email} has status ${subInfo.status}!\n`);
 		}
 	}
 	console.log("\x1b[0m");

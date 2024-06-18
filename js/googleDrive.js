@@ -22,8 +22,8 @@ const CREDENTIALS_PATH = path.join(process.cwd(), "DONT_GIT/credentials.json");
 let authClient;
 //#endregion
 
-let subsJson = editJsonFile(`${__dirname}../DONT_GIT/currentSubs.json`, { ignore_dots: false, });
-let configsJson = editJsonFile(`${__dirname}../DONT_GIT/configs.json`);
+let subsJson = editJsonFile(path.resolve('./DONT_GIT/currentSubs.json'), { ignore_dots: false, });
+let configsJson = editJsonFile(path.resolve('./DONT_GIT/configs.json'));
 
 //#region GOOGLE METHODS
 async function loadSavedCredentialsIfExist() {
@@ -110,8 +110,9 @@ async function GetFileMetadataFromID(file_id) {
 }
 
 async function TransformCsvIntoJson() {
+	LogThis(colors.magenta, 'Transforming Csv file to Json.');
 	let index = 0;
-	const csvFilePath = path.join(__dirname, "./csv/Base_de_Assinantes.csv");
+	const csvFilePath = path.resolve('./csv/Base_de_Assinantes.csv');
 
 	subsJson.empty();
 
@@ -127,7 +128,8 @@ async function TransformCsvIntoJson() {
 		.on("data", (data) => {
 			subsJson.set(`Assinante${index++}`, data);
 			subsJson.save();
-			subsJson = editJsonFile(`${__dirname}/json/currentSubs.json`, {
+			subsJson = editJsonFile(path.resolve('./DONT_GIT/currentSubs.json'), {
+				ignore_dots: false,
 				autosave: true,
 			});
 		});
@@ -164,6 +166,7 @@ function GetFolderIdFromSubTier(subTier) {
 }
 
 function ShareOrUnshareFolderToSubs() {
+	// TODO: Ainda não está liberando o acesso as pastas certas
 	let subInfo;
 	let folder_id;
 	let subCount = 0;
@@ -172,17 +175,18 @@ function ShareOrUnshareFolderToSubs() {
 	let otherCount = 0;
 
 	for (var sub in subsJson.read()) {
+		// FIXME: Por algum motivo, parece que não tá lendo corretamente o arquivo json.
 		subCount++;
 		subInfo = GetSubInfo(sub);
 		folder_id = GetFolderIdFromSubTier(subInfo.subTier);
 		if (subInfo.status == "Ativa") {
 			activeCount++;
 			LogThis(colors.green, `Giving access of ${folder_id} to ${subInfo.name} (${subInfo.email}) !\n`);
-			//ShareFolder(folder_id, subInfo.email);
+			//ShareFolder(folder_id, subInfo.email); // TODO: Ainda não está liberado para dar o acesso aos assinantes.
 		} else if (subInfo.status == "Inativa" || subInfo.status == "Cancelada") {
 			inactiveCount++;
 			LogThis(colors.red, `Removing access of ${folder_id} from ${subInfo.name} (${subInfo.email}) !\n`);
-			//UnshareFolder(folder_id, subInfo.email);
+			//UnshareFolder(folder_id, subInfo.email); // TODO: Ainda não está liberado para retirar o acesso dos assinantes.
 		} else {
 			otherCount++;
 			LogThis(colors.yellow, `!${subInfo.email} has status ${subInfo.status}!\n`);
@@ -216,6 +220,7 @@ function CheckForDuplicatesSubs() {
 		}
 	}
 }
+
 function RemoveInactiveSub(sub1, sub2) {
 	const stringSubStatus = "Status da Assinatura";
 	let inactiveSub;
@@ -233,7 +238,7 @@ function RemoveInactiveSub(sub1, sub2) {
 		autosave: true,
 	});
 
-	LogThis(colors.magenta, `Removed ${inactiveSub} (Duplicate)`);
+	LogThis(colors.cyan, `Removed ${inactiveSub} (Duplicate)`);
 }
 //#endregion
 
@@ -241,18 +246,16 @@ function RemoveInactiveSub(sub1, sub2) {
 // Logo preciso retirar o acesso de todos a todas as pastas, e adicionar depois.
 // TODO: Ao adicionar o acesso pros assinantes, adicionar ou retirar o acesso a pasta de recompensas gerais.
 
-async function InitBot() {
+exports.UpdateDrive = async function InitBot() {
+	LogThis(colors.magenta, 'Updating google drive.')
 	await TransformCsvIntoJson();
 
+	LogThis(colors.cyan, 'Checking for duplicates');
 	CheckForDuplicatesSubs();
 
 	authClient = await authorize();
-	//ShareOrUnshareFolderToSubs(); // TODO: Ainda não está liberando o acesso as pastas certas
-
-	process.exit(1);
+	ShareOrUnshareFolderToSubs();
 }
-
-InitBot();
 
 //#region Unused Methods
 async function ListFiles() {

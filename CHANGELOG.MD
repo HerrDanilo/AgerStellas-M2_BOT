@@ -13,14 +13,17 @@ e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/
 
 # Futuras versões
 
-- Centralizar os métodos relacionados a `csv` em um arquivo separado.
-- Ter mais verificações em caso de ambas duplicatas estarem inativas.
-- Na primeira vez que tenta baixar a nova lista, o bot não consegue baixá-la.
-- Notificar quando algum erro ocorre. (Seja por discord, email ou alguma outra forma além do terminal)
-- Notificar os assinantes por email somente no primeiro mês de assinatura.
-- Liberar para que o bot consiga mudar o acesso dos assinantes nas pastas.
-- Pessoas que trocarem de tier, devem perder o acesso a pasta anterior, tendo acesso somente a nova.
-- Mudar o acesso dos assinantes a pasta de recompensas gerais ao mudarem de tier.
+- **Não concluídos**
+  - Centralizar os métodos relacionados a `csv` em um arquivo separado.
+  - Ter mais verificações em caso de ambas duplicatas estarem inativas.
+  - Na primeira vez que tenta baixar a nova lista, o bot não consegue baixá-la.
+  - Notificar quando algum erro ocorre. (Seja por discord, email ou alguma outra forma além do terminal)
+  - Liberar para que o bot consiga mudar o acesso dos assinantes nas pastas.
+  - Pessoas que trocarem de tier, devem perder o acesso a pasta anterior, tendo acesso somente a nova.
+  - Mudar o acesso dos assinantes a pasta de recompensas gerais ao mudarem de tier.
+- **Concluídos**
+  - Notificar os assinantes por email somente no primeiro mês de assinatura.
+  - Agora é possível obter o id de assinante usando `GetSubInfo()`.
 
 # Versão 1.1.0 - 2024-06-19
 ## Adicionado

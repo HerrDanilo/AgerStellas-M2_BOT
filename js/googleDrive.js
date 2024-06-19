@@ -109,20 +109,21 @@ async function TransformCsvIntoJson() {
 		});
 }
 
-function GetSubInfo(jsonKey, debugShow) {
+function GetSubInfo(sub, debugShow) {
 	/* 
 	.Nome público (.Email perfil Catarse)
 	Assinatura: .Título da recompensa 
 	Status: .Status da Assinatura
 	*/
-
-	var name = subsJson.get(`${jsonKey}.Nome público`);
+	
+	var name = subsJson.get(`${sub}.Nome público`);
 	if (name === "") {
-		name = subsJson.get(`${jsonKey}.Nome completo`);
+		name = subsJson.get(`${sub}.Nome completo`);
 	}
-	var email = subsJson.get(`${jsonKey}.Email perfil Catarse`);
-	var subTier = subsJson.get(`${jsonKey}.Título da recompensa`);
-	var status = subsJson.get(`${jsonKey}.Status da Assinatura`);
+	var email = subsJson.get(`${sub}.Email perfil Catarse`);
+	var subTier = subsJson.get(`${sub}.Título da recompensa`);
+	var status = subsJson.get(`${sub}.Status da Assinatura`);
+	var catarseId = subsJson.get(`${sub}.ID do usuário`)
 
 	var consoleMsg =
 		`${name} (${email})\n` + `Assinatura: ${subTier}\n` + `Status: ${status}`;
@@ -131,7 +132,7 @@ function GetSubInfo(jsonKey, debugShow) {
 		console.log("\n" + consoleMsg);
 	}
 
-	return { name, email, subTier, status };
+	return { name, email, subTier, status, catarseId };
 }
 
 function GetFolderIdFromSubTier(subTier) {
@@ -139,23 +140,38 @@ function GetFolderIdFromSubTier(subTier) {
 	return folder_id;
 }
 
+//#region SUB NOTIFICATION
+function HasBeenNotified(subId) {
+    if (subsNotificationJson.get(`${subId}`) != undefined) {
+        return subsNotificationJson.get(`${subId}`);
+    }
+}
+function AddToNotificationJson(subId) {
+    if (subsNotificationJson.get(`${subId}`) == undefined) {
+        subsNotificationJson.set(`${subId}`, false);
+        subsNotificationJson.save();
+    }
+}
+//#endregion
+
 //#region CHANGING SUBS ACCESS
-async function ShareFolder(folder_id, email) {
+async function ShareFolder(folder_id, subInfo) {
+	var notification = !HasBeenNotified(subInfo.catarseId);
 	const drive = google.drive({ version: "v3", auth: authClient });
 	const res = await drive.permissions
 		.create({
 			requestBody: {
 				role: "reader",
 				type: "user",
-				emailAddress: email,
+				emailAddress: subInfo.email,
 			},
 			fileId: folder_id,
-			sendNotificationEmail: false, // TODO: Notificar somente na primeira vez que o usuário é adicionado.
+			sendNotificationEmail: notification, // TODO: Notificar somente na primeira vez que o usuário é adicionado.
 			fields: "*",
 		})
 		.catch((err) => LogThis(colors.red, err.errors));
 	if (res) {
-		if (enableLogs) console.log(`${email} now has access to ${folder_id}`);
+		if (enableLogs && notification) console.log(`${subInfo.name} will receive notification about: `);
 	}
 }
 
@@ -184,11 +200,12 @@ function ShareOrUnshareFolderToSubs() {
 	for (var sub in subsJson.read()) {
 		subCount++;
 		subInfo = GetSubInfo(sub);
+		AddToNotificationJson(subInfo.catarseId);
 		folder_id = GetFolderIdFromSubTier(subInfo.subTier);
 		if (subInfo.status == "Ativa") {
 			activeCount++;
 			if (enableLogs) LogThis(colors.green, `Giving access of ${folder_id} to ${subInfo.name} (${subInfo.email}) !\n`);
-			//ShareFolder(folder_id, subInfo.email); // TODO: Ainda não está liberado para dar o acesso aos assinantes.
+			//ShareFolder(folder_id, subInfo); // TODO: Ainda não está liberado para dar o acesso aos assinantes.
 		} else if (subInfo.status == "Inativa" || subInfo.status == "Cancelada") {
 			inactiveCount++;
 			if (enableLogs) LogThis(colors.red, `Removing access of ${folder_id} from ${subInfo.name} (${subInfo.email}) !\n`);

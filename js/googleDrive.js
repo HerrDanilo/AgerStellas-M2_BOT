@@ -24,6 +24,7 @@ let authClient;
 
 let subsJson = editJsonFile(path.resolve('./DONT_GIT/currentSubs.json'), { ignore_dots: false, });
 let configsJson = editJsonFile(path.resolve('./DONT_GIT/configs.json'));
+var enableLogs = configsJson.get('enableLogs');
 
 //#region GOOGLE METHODS
 async function loadSavedCredentialsIfExist() {
@@ -83,7 +84,7 @@ async function GetFileMetadataFromID(file_id) {
 }
 
 async function TransformCsvIntoJson() {
-	LogThis(colors.magenta, 'Transforming Csv file to Json.');
+	if (enableLogs) LogThis(colors.magenta, 'Transforming Csv file to Json.');
 	let index = 0;
 	const csvFilePath = path.resolve('./csv/Base_de_Assinantes.csv');
 
@@ -126,7 +127,7 @@ function GetSubInfo(jsonKey, debugShow) {
 	var consoleMsg =
 		`${name} (${email})\n` + `Assinatura: ${subTier}\n` + `Status: ${status}`;
 
-	if (debugShow) {
+	if (debugShow && enableLogs) {
 		console.log("\n" + consoleMsg);
 	}
 
@@ -153,7 +154,9 @@ async function ShareFolder(folder_id, email) {
 			fields: "*",
 		})
 		.catch((err) => LogThis(colors.red, err.errors));
-	if (res) console.log(`${email} now has access to ${folder_id}`);
+	if (res) {
+		if (enableLogs) console.log(`${email} now has access to ${folder_id}`);
+	}
 }
 
 async function UnshareFolder(folder_id, email) {
@@ -163,11 +166,13 @@ async function UnshareFolder(folder_id, email) {
 		fileId: folder_id,
 		permissionId: emailID,
 	});
-	if (res) console.log(`Succesfully deleted ${email}'s access to ${folder_id}`);
+	if (res) {
+		if (enableLogs) console.log(`Succesfully deleted ${email}'s access to ${folder_id}`);
+	}
 }
 
 function ShareOrUnshareFolderToSubs() {
-	LogThis(colors.magenta, "Changing sub's access.");
+	if (enableLogs) LogThis(colors.magenta, "Changing sub's access.");
 	// TODO: Ainda não está liberando o acesso as pastas certas
 	let subInfo;
 	let folder_id;
@@ -182,22 +187,24 @@ function ShareOrUnshareFolderToSubs() {
 		folder_id = GetFolderIdFromSubTier(subInfo.subTier);
 		if (subInfo.status == "Ativa") {
 			activeCount++;
-			LogThis(colors.green, `Giving access of ${folder_id} to ${subInfo.name} (${subInfo.email}) !\n`);
+			if (enableLogs) LogThis(colors.green, `Giving access of ${folder_id} to ${subInfo.name} (${subInfo.email}) !\n`);
 			//ShareFolder(folder_id, subInfo.email); // TODO: Ainda não está liberado para dar o acesso aos assinantes.
 		} else if (subInfo.status == "Inativa" || subInfo.status == "Cancelada") {
 			inactiveCount++;
-			LogThis(colors.red, `Removing access of ${folder_id} from ${subInfo.name} (${subInfo.email}) !\n`);
+			if (enableLogs) LogThis(colors.red, `Removing access of ${folder_id} from ${subInfo.name} (${subInfo.email}) !\n`);
 			//UnshareFolder(folder_id, subInfo.email); // TODO: Ainda não está liberado para retirar o acesso dos assinantes.
 		} else {
 			otherCount++;
-			LogThis(colors.yellow, `!${subInfo.email} has status ${subInfo.status}!\n`);
+			if (enableLogs) LogThis(colors.yellow, `!${subInfo.email} has status ${subInfo.status}!\n`);
 		}
 	}
-	console.log("\x1b[0m");
-	console.log(`Lifetime sub count: ${subCount}`);
-	console.log(`Current active subs: ${activeCount}`);
-	console.log(`Inactive subs: ${inactiveCount}`);
-	console.log(`Other subs: ${otherCount}`);
+	if (enableLogs) {
+		console.log("\x1b[0m");
+		console.log(`Lifetime sub count: ${subCount}`);
+		console.log(`Current active subs: ${activeCount}`);
+		console.log(`Inactive subs: ${inactiveCount}`);
+		console.log(`Other subs: ${otherCount}`);
+	}
 }
 //#endregion
 
@@ -221,7 +228,7 @@ function CheckForDuplicatesSubs() {
 				}
 		}
 	}
-	LogThis(colors.cyan, "Duplicates check done!");
+	if (enableLogs) LogThis(colors.cyan, "Duplicates check done!");
 }
 
 function RemoveInactiveSub(sub1, sub2) {
@@ -242,7 +249,7 @@ function RemoveInactiveSub(sub1, sub2) {
 		autosave: true,
 	});
 
-	LogThis(colors.cyan, `Removed ${inactiveSub} (Duplicate)`);
+	if (enableLogs) LogThis(colors.cyan, `Removed ${inactiveSub} (Duplicate)`);
 }
 //#endregion
 
@@ -251,15 +258,16 @@ function RemoveInactiveSub(sub1, sub2) {
 // TODO: Ao adicionar o acesso pros assinantes, adicionar ou retirar o acesso a pasta de recompensas gerais.
 
 exports.UpdateDrive = async function InitBot() {
-	LogThis(colors.magenta, 'Updating google drive.');
+	if (enableLogs) LogThis(colors.magenta, 'Updating google drive.');
 	await TransformCsvIntoJson();
 
-	LogThis(colors.cyan, 'Checking for duplicates');
+	if (enableLogs) LogThis(colors.cyan, 'Checking for duplicates');
 	CheckForDuplicatesSubs();
 
-	LogThis(colors.magenta, "Authorizing...");
+	if (enableLogs) LogThis(colors.magenta, "Authorizing...");
 	authClient = await authorize();
-	LogThis(colors.cyan, "Should be autorized.");
+
+	if (enableLogs) LogThis(colors.cyan, "Should be autorized.");
 	ShareOrUnshareFolderToSubs();
 }
 
@@ -276,9 +284,11 @@ async function ListFiles() {
 		return;
 	}
 
-	console.log("Files:");
-	files.map((file) => {
-		console.log(`${file.name} (${file.id})`);
-	});
+	if (enableLogs) {
+		console.log("Files:");
+		files.map((file) => {
+			console.log(`${file.name} (${file.id})`);
+		});
+	}
 }
 //#endregion

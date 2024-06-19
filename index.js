@@ -7,22 +7,23 @@ const { Delay, LogThis, colors } = require('aranha-commons');
 
 //#region GLOBAL VARIABLES
 var configsJson = editJsonFile(`${__dirname}/DONT_GIT/configs.json`);
+var enableLogs = configsJson.get('enableLogs');
 //#endregion
 
 async function ExitProgram() {
-    LogThis(colors.red, "Exiting program!");
-    await Delay(5);
+    if (enableLogs) LogThis(colors.red, "Exiting program!");
+    await Delay(5, enableLogs);
     process.exit(1);
 }
 
 async function InitBot() {
-    LogThis(colors.green, "Program is starting! - " + new Date());
+    if (enableLogs) LogThis(colors.green, "Program is starting! - " + new Date());
 
-    // var catarse = await entraCatarse.StartCatarse();
-    // LogThis(colors.cyan, 'Done with catarse.');
+    var catarse = await entraCatarse.StartCatarse();
+    if (enableLogs) LogThis(colors.cyan, 'Done with catarse.');
 
     await googleDrive.UpdateDrive();
-    LogThis(colors.cyan, 'Done with google drive.');
+    if (enableLogs) LogThis(colors.cyan, 'Done with google drive.');
 
     // await ProgramCooldown(catarse);
 
@@ -30,8 +31,8 @@ async function InitBot() {
 }
 
 async function ProgramCooldown(catarse) {
-    LogThis(colors.cyan, "Sleeping... " + new Date());
-    await Delay(900);
+    if (enableLogs) LogThis(colors.cyan, "Sleeping... " + new Date());
+    await Delay(900, enableLogs);
     await entraCatarse.DownloadCooldown(catarse.browser);
     await googleDrive.UpdateDrive();
 

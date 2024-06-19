@@ -10,6 +10,7 @@ const { Delay, LogThis, colors } = require("aranha-commons");
 const csvDownloadPath = path.resolve("./csv");
 let configsJson = editJsonFile(path.resolve('./DONT_GIT/configs.json'));
 var isHeadless = configsJson.get('puppeteer.isHeadless');
+var enableLogs = configsJson.get('enableLogs');
 //#endregion
 
 //#region LINKS
@@ -22,7 +23,7 @@ var linkCatarseLogin = "https://www.catarse.me/login";
 
 //#region BASE PUPPETEER METHODS
 async function StartBrowser() {
-    LogThis(colors.magenta, "Launching browser");
+    if (enableLogs) LogThis(colors.magenta, "Launching browser");
     const browser = await puppeteer.launch({ headless: isHeadless });
     const page = await browser.newPage();
     return { browser, page };
@@ -30,14 +31,14 @@ async function StartBrowser() {
 
 async function OpenSite(url) {
     const { browser, page } = await StartBrowser();
-    LogThis(colors.cyan, "Opening site:\n" + url);
+    if (enableLogs) LogThis(colors.cyan, "Opening site:\n" + url);
     await page.goto(url);
     return { browser, page };
 }
 //#endregion
 
 async function LoginCatarse(page) {
-    LogThis(colors.magenta, "Login into Catarse");
+    if (enableLogs) LogThis(colors.magenta, "Login into Catarse");
     await page.waitForSelector('input[type="email"]');
     await page.click('input[type="email"]');
     await page.keyboard.type(configsJson.get('catarse.email'));
@@ -51,7 +52,7 @@ async function LoginCatarse(page) {
 async function DownloadSubsList(page) {
     await SetDownloadBehaviour(page);
 
-    await Delay(5);
+    await Delay(5, enableLogs);
     await page.evaluate(() => {
         var baixar =
             "#app > div > div.before-footer.bg-gray.section > div.w-container > div.u-marginbottom-20 > div > div.u-text-right.w-col.w-col-3.w-col-small-3.w-col-tiny-3 > a";
@@ -74,20 +75,21 @@ async function DownloadSubsList(page) {
         }
     });
 
-    await Delay(20);
-    LogThis(colors.magenta, "Trying to download latest .csv file.");
-    await page.goto(linkBaixarReport);
+    await Delay(20, enableLogs);
+    if (enableLogs) LogThis(colors.magenta, "Trying to download latest .csv file.");
+
+    await page.goto(linkBaixarReport); // FIXME: Parece que não tá baixando o arquivo na primeira vez, apesar de conseguir fazer a requisição.
     await page.evaluate(() => {
         const className = "btn btn-small btn-dark w-button";
         var botoes = document.getElementsByClassName(className);
         botao = botoes[0];
         botao?.click();
     });
-    await Delay(30);
+    await Delay(30, enableLogs);
 
     var csvFolder = fs.readdirSync(csvDownloadPath);
     if (csvFolder.length > 1) {
-        LogThis(colors.green, "Download done!");
+        if (enableLogs) LogThis(colors.green, "Download done!");
         RemoveAndRenameCSVFile(csvFolder);
     }
 
@@ -109,9 +111,8 @@ async function RemoveAndRenameCSVFile(csvFolder) {
 exports.DownloadCooldown = async function DownloadCooldown(browser) {
     const page = await browser.newPage();
     await page.goto(linkSubsReport);
-    await Delay(10);
+    await Delay(10, enableLogs);
     if (page.url() == linkSubsReport) {
-        console.log('é o msm url da página!');
         await DownloadSubsList(page);
     }
     else LogThis(colors.red, "Algo deu errado ao sair do cooldown. \nLink da página: " + page.url());
@@ -123,7 +124,7 @@ async function SetDownloadBehaviour(page) {
         behavior: "allow",
         downloadPath: csvDownloadPath,
     });
-    LogThis(colors.green, "Download behavior setted.");
+    if (enableLogs) LogThis(colors.green, "Download behavior setted.");
 }
 
 async function SomethingWentWrong(browser) {
@@ -136,7 +137,7 @@ async function SomethingWentWrong(browser) {
 
 async function StopProgram() {
     // TODO: Ter um jeito de avisar que o programa deu erro, seja no discord, email ou seja lá qual forma for.
-    await Delay(5);
+    await Delay(5, enableLogs);
     process.exit(1);
 }
 
@@ -146,14 +147,14 @@ exports.StartCatarse = async function StartProgram() {
     var browser = site.browser;
     
     await LoginCatarse(page);
-    LogThis(colors.cyan, 'Waiting to verify page url.');
-    await Delay(10);
+    if (enableLogs) LogThis(colors.cyan, 'Waiting to verify page url.');
+    await Delay(10, enableLogs);
 
     if (page.url().includes('login')) {
         await SomethingWentWrong(browser);
         await StopProgram();
     } else {
-        LogThis(colors.green, 'Page url is correct.');
+        if (enableLogs) LogThis(colors.green, 'Page url is correct.');
         await page.goto(linkSubsReport);
         await DownloadSubsList(page);
     }

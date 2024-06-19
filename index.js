@@ -17,11 +17,16 @@ async function ExitProgram() {
 
 async function InitBot() {
     LogThis(colors.green, "Program is starting! - " + new Date());
+
     // var catarse = await entraCatarse.StartCatarse();
     // LogThis(colors.cyan, 'Done with catarse.');
+
     await googleDrive.UpdateDrive();
+    LogThis(colors.cyan, 'Done with google drive.');
 
     // await ProgramCooldown(catarse);
+
+    process.exit(1);
 }
 
 async function ProgramCooldown(catarse) {

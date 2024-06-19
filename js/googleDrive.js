@@ -166,6 +166,7 @@ function GetFolderIdFromSubTier(subTier) {
 }
 
 function ShareOrUnshareFolderToSubs() {
+	LogThis(colors.magenta, "Changing sub's access.");
 	// TODO: Ainda não está liberando o acesso as pastas certas
 	let subInfo;
 	let folder_id;
@@ -173,9 +174,8 @@ function ShareOrUnshareFolderToSubs() {
 	let activeCount = 0;
 	let inactiveCount = 0;
 	let otherCount = 0;
-
+	
 	for (var sub in subsJson.read()) {
-		// FIXME: Por algum motivo, parece que não tá lendo corretamente o arquivo json.
 		subCount++;
 		subInfo = GetSubInfo(sub);
 		folder_id = GetFolderIdFromSubTier(subInfo.subTier);
@@ -219,6 +219,7 @@ function CheckForDuplicatesSubs() {
 				}
 		}
 	}
+	LogThis(colors.cyan, "Duplicates check done!");
 }
 
 function RemoveInactiveSub(sub1, sub2) {
@@ -231,10 +232,11 @@ function RemoveInactiveSub(sub1, sub2) {
 	if (subsJson.get(`${sub2}.${stringSubStatus}`) != "Ativa") {
 		inactiveSub = sub2;
 	}
+	// FIXME: E se os dois forem inativos?
 
 	subsJson.unset(`${inactiveSub}`);
 	subsJson.save();
-	subsJson = editJsonFile(`${__dirname}/json/currentSubs.json`, {
+	subsJson = editJsonFile(path.resolve('./DONT_GIT/currentSubs.json'), {
 		autosave: true,
 	});
 
@@ -247,13 +249,15 @@ function RemoveInactiveSub(sub1, sub2) {
 // TODO: Ao adicionar o acesso pros assinantes, adicionar ou retirar o acesso a pasta de recompensas gerais.
 
 exports.UpdateDrive = async function InitBot() {
-	LogThis(colors.magenta, 'Updating google drive.')
+	LogThis(colors.magenta, 'Updating google drive.');
 	await TransformCsvIntoJson();
 
 	LogThis(colors.cyan, 'Checking for duplicates');
 	CheckForDuplicatesSubs();
 
+	LogThis(colors.magenta, "Authorizing...");
 	authClient = await authorize();
+	LogThis(colors.cyan, "Should be autorized.");
 	ShareOrUnshareFolderToSubs();
 }
 

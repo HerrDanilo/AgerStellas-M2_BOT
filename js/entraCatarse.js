@@ -86,6 +86,7 @@ async function DownloadSubsList(page) {
         botao?.click();
     });
     await Delay(30, enableLogs);
+    // TODO: A lista baixada não está ordenada pelos nomes dos assinantes, mas parece q pelo id de usuário.
 
     var csvFolder = fs.readdirSync(csvDownloadPath);
     if (csvFolder.length > 1) {

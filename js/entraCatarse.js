@@ -2,8 +2,8 @@
 const fs = require('fs');
 const path = require("path");
 const puppeteer = require("puppeteer");
-const { Delay, LogThis, colors } = require("aranha-commons");
 const editJsonFile = require('edit-json-file');
+const { Delay, LogThis, colors } = require("aranha-commons");
 //#endregion
 
 //#region GLOBAL VARIABLES
@@ -114,7 +114,7 @@ exports.DownloadCooldown = async function DownloadCooldown(browser) {
         console.log('é o msm url da página!');
         await DownloadSubsList(page);
     }
-    else LogThis(colors.red, "Algo deu errado ao sair do cooldown. \n Link da página: " + page.url());
+    else LogThis(colors.red, "Algo deu errado ao sair do cooldown. \nLink da página: " + page.url());
 }
 
 async function SetDownloadBehaviour(page) {

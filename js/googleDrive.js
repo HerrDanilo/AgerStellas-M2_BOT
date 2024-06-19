@@ -5,8 +5,8 @@ const fs = require("fs").promises;
 const process = require("process");
 const { google } = require("googleapis");
 const editJsonFile = require("edit-json-file");
-const { authenticate } = require("@google-cloud/local-auth");
 const { LogThis, colors } = require("aranha-commons");
+const { authenticate } = require("@google-cloud/local-auth");
 //#endregion
 
 //#region GOOGLE API VARIABLES
@@ -64,33 +64,6 @@ async function authorize() {
 	return client;
 }
 //#endregion
-
-async function ShareFolder(folder_id, email) {
-	const drive = google.drive({ version: "v3", auth: authClient });
-	const res = await drive.permissions
-		.create({
-			requestBody: {
-				role: "reader",
-				type: "user",
-				emailAddress: email,
-			},
-			fileId: folder_id,
-			sendNotificationEmail: false, // TODO: Notificar somente na primeira vez que o usuário é adicionado.
-			fields: "*",
-		})
-		.catch((err) => LogThis(colors.red, err.errors));
-	if (res) console.log(`${email} now has access to ${folder_id}`);
-}
-
-async function UnshareFolder(folder_id, email) {
-	const drive = google.drive({ version: "v3", auth: authClient });
-	const emailID = await GetPermissionIdFromEmail(email);
-	const res = await drive.permissions.delete({
-		fileId: folder_id,
-		permissionId: emailID,
-	});
-	if (res) console.log(`Succesfully deleted ${email}'s access to ${folder_id}`);
-}
 
 async function GetPermissionIdFromEmail(email) {
 	const drive = google.drive({ version: "v2", auth: authClient });
@@ -165,6 +138,34 @@ function GetFolderIdFromSubTier(subTier) {
 	return folder_id;
 }
 
+//#region CHANGING SUBS ACCESS
+async function ShareFolder(folder_id, email) {
+	const drive = google.drive({ version: "v3", auth: authClient });
+	const res = await drive.permissions
+		.create({
+			requestBody: {
+				role: "reader",
+				type: "user",
+				emailAddress: email,
+			},
+			fileId: folder_id,
+			sendNotificationEmail: false, // TODO: Notificar somente na primeira vez que o usuário é adicionado.
+			fields: "*",
+		})
+		.catch((err) => LogThis(colors.red, err.errors));
+	if (res) console.log(`${email} now has access to ${folder_id}`);
+}
+
+async function UnshareFolder(folder_id, email) {
+	const drive = google.drive({ version: "v3", auth: authClient });
+	const emailID = await GetPermissionIdFromEmail(email);
+	const res = await drive.permissions.delete({
+		fileId: folder_id,
+		permissionId: emailID,
+	});
+	if (res) console.log(`Succesfully deleted ${email}'s access to ${folder_id}`);
+}
+
 function ShareOrUnshareFolderToSubs() {
 	LogThis(colors.magenta, "Changing sub's access.");
 	// TODO: Ainda não está liberando o acesso as pastas certas
@@ -198,8 +199,9 @@ function ShareOrUnshareFolderToSubs() {
 	console.log(`Inactive subs: ${inactiveCount}`);
 	console.log(`Other subs: ${otherCount}`);
 }
+//#endregion
 
-//#region Duplicates Section
+//#region DUPLICATES
 function CheckForDuplicatesSubs() {
 	const stringUserID = 'ID do usuário';
 
@@ -261,7 +263,7 @@ exports.UpdateDrive = async function InitBot() {
 	ShareOrUnshareFolderToSubs();
 }
 
-//#region Unused Methods
+//#region UNUSED METHODS
 async function ListFiles() {
 	const drive = google.drive({ version: "v3", auth: authClient });
 	const res = await drive.files.list({

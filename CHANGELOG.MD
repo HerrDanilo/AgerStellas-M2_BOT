@@ -22,7 +22,7 @@ e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/
   - Mudar o acesso dos assinantes a pasta de recompensas gerais ao mudarem de tier.
 - **Concluídos**
   - *2024-06-19*
-  - Notificar os assinantes por email somente no primeiro mês de assinatura.
+  - Notificar os assinantes por email somente na primeira vez que disponibilizar o acesso.
   - Agora é possível obter o id de assinante usando `GetSubInfo()`.
   - *2024-06-20*
   - Adicionada uma verificação final nas duplicatas.

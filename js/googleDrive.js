@@ -115,7 +115,7 @@ function GetSubInfo(sub, debugShow) {
 	Assinatura: .Título da recompensa 
 	Status: .Status da Assinatura
 	*/
-	
+
 	var name = subsJson.get(`${sub}.Nome público`);
 	if (name === "") {
 		name = subsJson.get(`${sub}.Nome completo`);
@@ -142,15 +142,15 @@ function GetFolderIdFromSubTier(subTier) {
 
 //#region SUB NOTIFICATION
 function HasBeenNotified(subId) {
-    if (subsNotificationJson.get(`${subId}`) != undefined) {
-        return subsNotificationJson.get(`${subId}`);
-    }
+	if (subsNotificationJson.get(`${subId}`) != undefined) {
+		return subsNotificationJson.get(`${subId}`);
+	}
 }
 function AddToNotificationJson(subId) {
-    if (subsNotificationJson.get(`${subId}`) == undefined) {
-        subsNotificationJson.set(`${subId}`, false);
-        subsNotificationJson.save();
-    }
+	if (subsNotificationJson.get(`${subId}`) == undefined) {
+		subsNotificationJson.set(`${subId}`, false);
+		subsNotificationJson.save();
+	}
 }
 //#endregion
 
@@ -196,7 +196,7 @@ function ShareOrUnshareFolderToSubs() {
 	let activeCount = 0;
 	let inactiveCount = 0;
 	let otherCount = 0;
-	
+
 	for (var sub in subsJson.read()) {
 		subCount++;
 		subInfo = GetSubInfo(sub);
@@ -252,13 +252,17 @@ function RemoveInactiveSub(sub1, sub2) {
 	const stringSubStatus = "Status da Assinatura";
 	let inactiveSub;
 
-	if (subsJson.get(`${sub1}.${stringSubStatus}`) != "Ativa") {
-		inactiveSub = sub1;
+	if (subsJson.get(`${sub1}.${stringSubStatus}`) != "Ativa") inactiveSub = sub1;
+	if (subsJson.get(`${sub2}.${stringSubStatus}`) != "Ativa") inactiveSub = sub2;
+
+	// Se as duas entradas forem inativas, deixa aquela com o último pagamento mais recente.
+	if (subsJson.get(`${sub1}.${stringSubStatus}`) != "Ativa" && subsJson.get(`${sub2}.${stringSubStatus}`) != "Ativa") {
+		var sub1Payment = GetLastPayment(sub1);
+		var sub2Payment = GetLastPayment(sub2);
+
+		if (sub1Payment < sub2Payment) inactiveSub = sub1;
+		if (sub2Payment < sub1Payment) inactiveSub = sub2;
 	}
-	if (subsJson.get(`${sub2}.${stringSubStatus}`) != "Ativa") {
-		inactiveSub = sub2;
-	}
-	// FIXME: E se os dois forem inativos?
 
 	subsJson.unset(`${inactiveSub}`);
 	subsJson.save();
@@ -267,6 +271,18 @@ function RemoveInactiveSub(sub1, sub2) {
 	});
 
 	if (enableLogs) LogThis(colors.cyan, `Removed ${inactiveSub} (Duplicate)`);
+}
+
+function GetLastPayment(sub) {
+	const lastPaymentKey = "Data de confirmação da última cobrança";
+	
+	var subPayment = subsJson.get(`${sub}.${lastPaymentKey}`);
+	var subData = subPayment.split(' ');
+	subData = subData[0].split('/');
+	var dia = subData[0], mes = subData[1], ano = subData[2];
+	var lastPaymentDate = new Date(ano, --mes, dia);
+
+	return lastPaymentDate;
 }
 //#endregion
 

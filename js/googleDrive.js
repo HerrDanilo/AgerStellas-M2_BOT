@@ -10,6 +10,7 @@ const { authenticate } = require("@google-cloud/local-auth");
 //#endregion
 
 //#region GOOGLE API VARIABLES
+
 // If modifying these scopes, delete token.json.
 const SCOPES = ["https://www.googleapis.com/auth/drive"];
 // The file token.json stores the user's access and refresh tokens, and is
@@ -22,6 +23,7 @@ const CREDENTIALS_PATH = path.join(process.cwd(), "DONT_GIT/credentials.json");
 let authClient;
 //#endregion
 
+let subsNotificationJson = editJsonFile(path.resolve('./DONT_GIT/subsNotification.json'));
 let subsJson = editJsonFile(path.resolve('./DONT_GIT/currentSubs.json'), { ignore_dots: false, });
 let configsJson = editJsonFile(path.resolve('./DONT_GIT/configs.json'));
 var enableLogs = configsJson.get('enableLogs');
@@ -33,6 +35,7 @@ async function loadSavedCredentialsIfExist() {
 		const credentials = JSON.parse(content);
 		return google.auth.fromJSON(credentials);
 	} catch (err) {
+		console.log("deu erro ao carregar as credenciais existentes.");
 		return null;
 	}
 }
@@ -53,6 +56,7 @@ async function saveCredentials(client) {
 async function authorize() {
 	let client = await loadSavedCredentialsIfExist();
 	if (client) {
+		console.log("já tem o cliente.");
 		return client;
 	}
 	client = await authenticate({
@@ -302,6 +306,16 @@ exports.UpdateDrive = async function InitBot() {
 
 	if (enableLogs) LogThis(colors.cyan, "Should be autorized.");
 	ShareOrUnshareFolderToSubs();
+}
+
+exports.GoogleDriveTest = async function GoogleDriveTest() {
+	authClient = await authorize();
+
+	console.log(configsJson.get('folders'));
+
+	for (var folder in configsJson.get('folders')) {
+		await GetFileMetadataFromID(configsJson.get(`folders.${folder}.id`));
+	}
 }
 
 //#region UNUSED METHODS

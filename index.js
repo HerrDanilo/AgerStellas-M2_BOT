@@ -40,6 +40,7 @@ async function ProgramCooldown(catarse) {
 }
 
 function TesteDoBot() {
+    googleDrive.GoogleDriveTest();
     ExitProgram();
 }
 

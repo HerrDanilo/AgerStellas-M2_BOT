@@ -94,6 +94,23 @@ async function DownloadSubsList(page) {
         RemoveAndRenameCSVFile(csvFolder);
     }
 
+    // FIXME: ARRUMAR ISSO DO BOT NÃO CONSEGUIR BAIXAR O CSV NA PRIMEIRA VEZ.
+    else if (csvFolder.length == 1) {
+        LogThis(colors.yellow, "Trying to download again.")
+        await page.evaluate(() => {
+            const className = "btn btn-small btn-dark w-button";
+            var botoes = document.getElementsByClassName(className);
+            botao = botoes[0];
+            botao?.click();
+        });
+        await Delay(30, enableLogs);
+
+        if (csvFolder.length > 1) {
+            if (enableLogs) LogThis(colors.green, "Download done!");
+            RemoveAndRenameCSVFile(csvFolder);
+        }
+    }
+
     await page.close();
 }
 

@@ -84,7 +84,7 @@ async function GetFileMetadataFromID(file_id) {
 		fileId: file_id,
 		fields: "permissions(id,role,emailAddress,displayName)",
 	});
-	console.log(res.data);
+	return res.data;
 }
 
 async function TransformCsvIntoJson() {
@@ -160,72 +160,73 @@ function AddToNotificationJson(subId) {
 
 //#region CHANGING SUBS ACCESS
 async function ShareFolder(folder_id, subInfo) {
-	var notification = !HasBeenNotified(subInfo.catarseId);
 	const drive = google.drive({ version: "v3", auth: authClient });
-	const res = await drive.permissions
-		.create({
-			requestBody: {
-				role: "reader",
-				type: "user",
-				emailAddress: subInfo.email,
-			},
-			fileId: folder_id,
-			sendNotificationEmail: notification, // TODO: Notificar somente na primeira vez que o usuário é adicionado.
-			fields: "*",
-		})
-		.catch((err) => LogThis(colors.red, err.errors));
+	const res = await drive.permissions.create({
+		requestBody: {
+			role: "reader",
+			type: "user",
+			emailAddress: subInfo.email,
+		},
+		fileId: folder_id,
+		sendNotificationEmail: false, // TODO: Notificar somente na primeira vez que o usuário é adicionado.
+		fields: "*",
+	}).catch((err) => console.error(err.errors));
+
 	if (res) {
-		if (enableLogs && notification) console.log(`${subInfo.name} will receive notification about: `);
+		if (enableLogs) LogThis(colors.green, `${subInfo.name} now has access to ${folder_id}`);
 	}
 }
 
 async function UnshareFolder(folder_id, email) {
 	const drive = google.drive({ version: "v3", auth: authClient });
-	const emailID = await GetPermissionIdFromEmail(email);
 	const res = await drive.permissions.delete({
 		fileId: folder_id,
-		permissionId: emailID,
-	});
+		permissionId: await GetPermissionIdFromEmail(email),
+	}).catch((err) => console.error(err.errors));
+
 	if (res) {
-		if (enableLogs) console.log(`Succesfully deleted ${email}'s access to ${folder_id}`);
+		if (enableLogs) LogThis(colors.red, `Succesfully removed ${email}'s access to ${folder_id}`);
 	}
 }
 
-function ShareOrUnshareFolderToSubs() {
-	if (enableLogs) LogThis(colors.magenta, "Changing sub's access.");
-	// TODO: Ainda não está liberando o acesso as pastas certas
-	let subInfo;
-	let folder_id;
-	let subCount = 0;
-	let activeCount = 0;
-	let inactiveCount = 0;
-	let otherCount = 0;
+async function BulkChangeSubsAccess() { // TODO: Ainda não está liberado para mudar o acesso das pastas.
+	if (enableLogs) LogThis(colors.magenta, "Bulk changing access.");
 
 	for (var sub in subsJson.read()) {
-		subCount++;
-		subInfo = GetSubInfo(sub);
-		AddToNotificationJson(subInfo.catarseId);
-		folder_id = GetFolderIdFromSubTier(subInfo.subTier);
-		if (subInfo.status == "Ativa") {
-			activeCount++;
-			if (enableLogs) LogThis(colors.green, `Giving access of ${folder_id} to ${subInfo.name} (${subInfo.email}) !\n`);
-			//ShareFolder(folder_id, subInfo); // TODO: Ainda não está liberado para dar o acesso aos assinantes.
-		} else if (subInfo.status == "Inativa" || subInfo.status == "Cancelada") {
-			inactiveCount++;
-			if (enableLogs) LogThis(colors.red, `Removing access of ${folder_id} from ${subInfo.name} (${subInfo.email}) !\n`);
-			//UnshareFolder(folder_id, subInfo.email); // TODO: Ainda não está liberado para retirar o acesso dos assinantes.
-		} else {
-			otherCount++;
-			if (enableLogs) LogThis(colors.yellow, `!${subInfo.email} has status ${subInfo.status}!\n`);
-		}
+		var subInfo = GetSubInfo(sub);
+
+		// TODO: Ainda não pode retirar o acesso as pastas!
+		// await RemoveAccessFromAllFolders(subInfo, subInfo.status == "Ativa");
+
+		// TODO: Ainda não pode liberar o acesso as pastas!
+		// if (subInfo.status == "Ativa") await GiveAccessToFolders(subInfo);
 	}
-	if (enableLogs) {
-		console.log("\x1b[0m");
-		console.log(`Lifetime sub count: ${subCount}`);
-		console.log(`Current active subs: ${activeCount}`);
-		console.log(`Inactive subs: ${inactiveCount}`);
-		console.log(`Other subs: ${otherCount}`);
+}
+
+async function RemoveAccessFromAllFolders(subInfo, isActive) {
+	var sub_permissionId = await GetPermissionIdFromEmail(subInfo.email);
+	let hasAccess;
+	for (var folder in configsJson.get('folders')) {
+		hasAccess = false;
+		var folder_ID = configsJson.get(`folders.${folder}.id`);
+
+		if (isActive && (folder == "Recompensas Gerais" || folder == subInfo.subTier)) continue;
+
+		var folderMetadata = (await GetFileMetadataFromID(folder_ID)).permissions;
+
+		folderMetadata.forEach(async (permission) => {
+			if (permission.id == sub_permissionId) hasAccess = true;
+		});
+		if (hasAccess) await UnshareFolder(folder_ID, subInfo.email);
 	}
+}
+
+async function GiveAccessToFolders(subInfo) {
+	var generalFolder_ID = configsJson.get('folders.Recompensas Gerais.id');
+	var subTierFolder_ID = GetFolderIdFromSubTier(subInfo.subTier);
+
+	await ShareFolder(generalFolder_ID, subInfo);
+	await ShareFolder(subTierFolder_ID, subInfo);
 }
 //#endregion
 
@@ -279,7 +280,7 @@ function RemoveInactiveSub(sub1, sub2) {
 
 function GetLastPayment(sub) {
 	const lastPaymentKey = "Data de confirmação da última cobrança";
-	
+
 	var subPayment = subsJson.get(`${sub}.${lastPaymentKey}`);
 	var subData = subPayment.split(' ');
 	subData = subData[0].split('/');
@@ -289,10 +290,6 @@ function GetLastPayment(sub) {
 	return lastPaymentDate;
 }
 //#endregion
-
-// TODO: Pessoas que trocam de tier mas mantem a assinatura, recebem acesso a pasta nova, mas mantém o acesso a pasta do tier anterior.
-// Logo preciso retirar o acesso de todos a todas as pastas, e adicionar depois.
-// TODO: Ao adicionar o acesso pros assinantes, adicionar ou retirar o acesso a pasta de recompensas gerais.
 
 exports.UpdateDrive = async function InitBot() {
 	if (enableLogs) LogThis(colors.magenta, 'Updating google drive.');
@@ -305,20 +302,23 @@ exports.UpdateDrive = async function InitBot() {
 	authClient = await authorize();
 
 	if (enableLogs) LogThis(colors.cyan, "Should be autorized.");
-	ShareOrUnshareFolderToSubs();
+	BulkChangeSubsAccess();
 }
 
 exports.GoogleDriveTest = async function GoogleDriveTest() {
 	authClient = await authorize();
 
-	console.log(configsJson.get('folders'));
-
-	for (var folder in configsJson.get('folders')) {
-		await GetFileMetadataFromID(configsJson.get(`folders.${folder}.id`));
-	}
+	await BulkChangeSubsAccess();
 }
 
 //#region UNUSED METHODS
+async function ListAllFoldersPermissions() {
+	for (var folder in configsJson.get('folders')) {
+		console.log(`\n-------${folder}:`);
+		console.log((await GetFileMetadataFromID(configsJson.get(`folders.${folder}.id`))).permissions);
+	}
+}
+
 async function ListFiles() {
 	const drive = google.drive({ version: "v3", auth: authClient });
 	const res = await drive.files.list({

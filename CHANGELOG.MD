@@ -18,15 +18,19 @@ e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/
   - Na primeira vez que tenta baixar a nova lista, o bot não consegue baixá-la.
   - Notificar quando algum erro ocorre. (Seja por discord, email ou alguma outra forma além do terminal)
   - Liberar para que o bot consiga mudar o acesso dos assinantes nas pastas.
-  - Pessoas que trocarem de tier, devem perder o acesso a pasta anterior, tendo acesso somente a nova.
-  - Mudar o acesso dos assinantes a pasta de recompensas gerais ao mudarem de tier.
 - **Concluídos**
   - *2024-06-19*
-  - Notificar os assinantes por email somente na primeira vez que disponibilizar o acesso.
-  - Agora é possível obter o id de assinante usando `GetSubInfo()`.
+    - Notificar os assinantes por email somente na primeira vez que disponibilizar o acesso.
+    - Agora é possível obter o id de assinante usando `GetSubInfo()`.
   - *2024-06-20*
-  - Adicionada uma verificação final nas duplicatas.
-    - Caso ambas as duplicatas estejam inativas, mantenha o registro somente da com o último pagamento mais recente.
+    - Adicionada uma verificação final nas duplicatas.
+      - Caso ambas as duplicatas estejam inativas, mantenha o registro somente da com o último pagamento mais recente.
+  - *2024-06-27*
+    - Agora primeiro retira o acesso dos assinantes as pastas.
+    - Quando for remover o acesso, verifica se está ativo ou não:
+      - **Se Ativo:** Retirar o acesso de todas as pastas, exceto a de Recompensas Gerais, e a respectiva do seu níver de assinatura.
+      - **Se *NÃO* Ativo:** Retira o acesso de ***TODAS*** as pastas.
+    - E então libera o acesso **SE ESTIVER ATIVO** a pasta de Recompensas Gerais, e do seu nível.
 
 # Versão 1.1.0 - 2024-06-19
 ## Adicionado

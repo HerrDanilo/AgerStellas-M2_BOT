@@ -302,7 +302,7 @@ exports.UpdateDrive = async function InitBot() {
 	authClient = await authorize();
 
 	if (enableLogs) LogThis(colors.cyan, "Should be autorized.");
-	BulkChangeSubsAccess();
+	await BulkChangeSubsAccess();
 }
 
 exports.GoogleDriveTest = async function GoogleDriveTest() {

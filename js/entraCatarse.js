@@ -9,7 +9,7 @@ const { Delay, LogThis, colors } = require("aranha-commons");
 //#region GLOBAL VARIABLES
 const csvDownloadPath = path.resolve("./csv");
 let configsJson = editJsonFile(path.resolve('./DONT_GIT/configs.json'));
-var isHeadless = configsJson.get('puppeteer.isHeadless');
+var isHeadless = configsJson.get('puppeteer.headless');
 var enableLogs = configsJson.get('enableLogs');
 //#endregion
 
@@ -76,9 +76,26 @@ async function DownloadSubsList(page) {
     });
 
     await Delay(20, enableLogs);
-    if (enableLogs) LogThis(colors.magenta, "Trying to download latest .csv file.");
+    await page.goto(linkBaixarReport);
 
-    await page.goto(linkBaixarReport); // FIXME: Parece que não tá baixando o arquivo na primeira vez, apesar de conseguir fazer a requisição.
+    // TODO: A lista baixada não está ordenada pelos nomes dos assinantes, mas parece q pelo id de usuário.
+    var csvFolder = fs.readdirSync(csvDownloadPath);
+    let downloadAttempts = 0;
+
+    while (csvFolder.length == 1) {
+        downloadAttempts++;
+        if (enableLogs) LogThis(colors.magenta, downloadAttempts + ".Trying to download latest .csv file.");
+        await TryToDownloadListFile(page, csvFolder);
+        csvFolder = fs.readdirSync(csvDownloadPath); // Read the folder contents again.
+    }
+
+    if (enableLogs) LogThis(colors.green, "Download done!");
+    RemoveAndRenameCSVFile(csvFolder);
+
+    await page.close();
+}
+
+async function TryToDownloadListFile(page, csvFolder) {
     await page.evaluate(() => {
         const className = "btn btn-small btn-dark w-button";
         var botoes = document.getElementsByClassName(className);
@@ -86,32 +103,6 @@ async function DownloadSubsList(page) {
         botao?.click();
     });
     await Delay(30, enableLogs);
-    // TODO: A lista baixada não está ordenada pelos nomes dos assinantes, mas parece q pelo id de usuário.
-
-    var csvFolder = fs.readdirSync(csvDownloadPath);
-    if (csvFolder.length > 1) {
-        if (enableLogs) LogThis(colors.green, "Download done!");
-        RemoveAndRenameCSVFile(csvFolder);
-    }
-
-    // FIXME: ARRUMAR ISSO DO BOT NÃO CONSEGUIR BAIXAR O CSV NA PRIMEIRA VEZ.
-    else if (csvFolder.length == 1) {
-        LogThis(colors.yellow, "Trying to download again.")
-        await page.evaluate(() => {
-            const className = "btn btn-small btn-dark w-button";
-            var botoes = document.getElementsByClassName(className);
-            botao = botoes[0];
-            botao?.click();
-        });
-        await Delay(30, enableLogs);
-
-        if (csvFolder.length > 1) {
-            if (enableLogs) LogThis(colors.green, "Download done!");
-            RemoveAndRenameCSVFile(csvFolder);
-        }
-    }
-
-    await page.close();
 }
 
 async function RemoveAndRenameCSVFile(csvFolder) {
@@ -163,7 +154,7 @@ exports.StartCatarse = async function StartProgram() {
     var site = await OpenSite(linkCatarseLogin);
     var page = site.page;
     var browser = site.browser;
-    
+
     await LoginCatarse(page);
     if (enableLogs) LogThis(colors.cyan, 'Waiting to verify page url.');
     await Delay(10, enableLogs);

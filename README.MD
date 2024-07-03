@@ -7,9 +7,9 @@
 
 # AgerStellas Bot
 
-Esse projeto foi criado para auxiliar a produção do quadrinho [AgerStellas](https://www.catarse.me/agerstellas), principalmente nas partes em que se pode ser automatizada, com o principal foco sendo a atribuição correta dos assinantes do Catarse as suas respectivas recompensas.
+Esse projeto foi criado para auxiliar a produção do quadrinho [Ager Stellas](https://www.catarse.me/agerstellas), principalmente nas partes em que se pode ser automatizada, com o principal foco sendo a atribuição correta dos assinantes do Catarse as suas respectivas recompensas.
 
-O quadrinho AgerStellas é produzido por [M2_Drawns](https://www.instagram.com/m2_draws/).
+O quadrinho AgerStellas é produzido por [M2_Draws](https://www.instagram.com/m2_draws/).
 
 ___
 # Qual o intuito do bot?
@@ -38,5 +38,5 @@ O bot de AgerStellas foi criado com a intenção de auxiliar a equipe de produç
 ___
 # Última atualização
 
-A última versão do Bot é a `1.2.2`.
+A última versão do Bot é a `1.3.0`.
 Para mais detalhes, visite o [Changelog](CHANGELOG.MD).

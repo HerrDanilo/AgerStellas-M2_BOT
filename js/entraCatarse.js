@@ -75,6 +75,7 @@ async function DownloadSubsList(page) {
         }
     });
 
+    if (enableLogs) LogThis(colors.magenta, "Requesting newer list.");
     await Delay(20, enableLogs);
     await page.goto(linkBaixarReport);
 
@@ -82,20 +83,20 @@ async function DownloadSubsList(page) {
     var csvFolder = fs.readdirSync(csvDownloadPath);
     let downloadAttempts = 0;
 
-    while (csvFolder.length == 1) {
+    while (csvFolder.length <= 1) {
         downloadAttempts++;
         if (enableLogs) LogThis(colors.magenta, downloadAttempts + ".Trying to download latest .csv file.");
-        await TryToDownloadListFile(page, csvFolder);
+        await TryToDownloadListFile(page);
         csvFolder = fs.readdirSync(csvDownloadPath); // Read the folder contents again.
+        if (downloadAttempts >= 5) break;
     }
 
     if (enableLogs) LogThis(colors.green, "Download done!");
-    RemoveAndRenameCSVFile(csvFolder);
 
     await page.close();
 }
 
-async function TryToDownloadListFile(page, csvFolder) {
+async function TryToDownloadListFile(page) {
     await page.evaluate(() => {
         const className = "btn btn-small btn-dark w-button";
         var botoes = document.getElementsByClassName(className);
@@ -103,18 +104,6 @@ async function TryToDownloadListFile(page, csvFolder) {
         botao?.click();
     });
     await Delay(30, enableLogs);
-}
-
-async function RemoveAndRenameCSVFile(csvFolder) {
-    // Remove older csv file.
-    var csvToRemove = path.resolve(`${csvDownloadPath}/Base_de_Assinantes.csv`)
-    fs.unlinkSync(csvToRemove);
-
-    // Rename Newer csv file.
-    var fileToRename = csvFolder[0];
-    fs.rename(`${csvDownloadPath}/${fileToRename}`, `${csvDownloadPath}/Base_de_Assinantes.csv`, function (err) {
-        if (err) LogThis(colors.red, 'ERROR: ' + err);
-    });
 }
 
 exports.DownloadCooldown = async function DownloadCooldown(browser) {

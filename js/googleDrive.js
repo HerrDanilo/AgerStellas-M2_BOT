@@ -1,12 +1,11 @@
 //#region IMPORTS
 const path = require("path");
-const csv = require("csvtojson");
 const fs = require("fs").promises;
-const process = require("process");
 const { google } = require("googleapis");
 const editJsonFile = require("edit-json-file");
 const { LogThis, colors } = require("aranha-commons");
 const { authenticate } = require("@google-cloud/local-auth");
+const subsList = require('./subsList.js');
 //#endregion
 
 //#region GOOGLE API VARIABLES
@@ -17,8 +16,8 @@ const SCOPES = ["https://www.googleapis.com/auth/drive"];
 // created automatically when the authorization flow completes for the first
 // time.
 
-const TOKEN_PATH = path.join(process.cwd(), "DONT_GIT/token.json");
-const CREDENTIALS_PATH = path.join(process.cwd(), "DONT_GIT/credentials.json");
+const TOKEN_PATH = path.join(path.resolve('./DONT_GIT/token.json'));
+const CREDENTIALS_PATH = path.join(path.resolve('./DONT_GIT/credentials.json'));
 
 let authClient;
 //#endregion
@@ -87,58 +86,6 @@ async function GetFileMetadataFromID(file_id) {
 	return res.data;
 }
 
-async function TransformCsvIntoJson() {
-	if (enableLogs) LogThis(colors.magenta, 'Transforming Csv file to Json.');
-	let index = 0;
-	const csvFilePath = path.resolve('./csv/Base_de_Assinantes.csv');
-
-	subsJson.empty();
-
-	await csv(
-		{
-			flatKeys: true,
-		},
-		{
-			objectMode: true,
-		}
-	)
-		.fromFile(csvFilePath)
-		.on("data", (data) => {
-			subsJson.set(`Assinante${index++}`, data);
-			subsJson.save();
-			subsJson = editJsonFile(path.resolve('./DONT_GIT/currentSubs.json'), {
-				ignore_dots: false,
-				autosave: true,
-			});
-		});
-}
-
-function GetSubInfo(sub, debugShow) {
-	/* 
-	.Nome público (.Email perfil Catarse)
-	Assinatura: .Título da recompensa 
-	Status: .Status da Assinatura
-	*/
-
-	var name = subsJson.get(`${sub}.Nome público`);
-	if (name === "") {
-		name = subsJson.get(`${sub}.Nome completo`);
-	}
-	var email = subsJson.get(`${sub}.Email perfil Catarse`);
-	var subTier = subsJson.get(`${sub}.Título da recompensa`);
-	var status = subsJson.get(`${sub}.Status da Assinatura`);
-	var catarseId = subsJson.get(`${sub}.ID do usuário`)
-
-	var consoleMsg =
-		`${name} (${email})\n` + `Assinatura: ${subTier}\n` + `Status: ${status}`;
-
-	if (debugShow && enableLogs) {
-		console.log("\n" + consoleMsg);
-	}
-
-	return { name, email, subTier, status, catarseId };
-}
-
 function GetFolderIdFromSubTier(subTier) {
 	var folder_id = configsJson.get(`folders.${subTier}.id`);
 	return folder_id;
@@ -193,7 +140,7 @@ async function BulkChangeSubsAccess() { // TODO: Ainda não está liberado para 
 	if (enableLogs) LogThis(colors.magenta, "Bulk changing access.");
 
 	for (var sub in subsJson.read()) {
-		var subInfo = GetSubInfo(sub);
+		var subInfo = subsList.GetSubInfo(sub);
 
 		// TODO: Ainda não pode retirar o acesso as pastas!
 		// await RemoveAccessFromAllFolders(subInfo, subInfo.status == "Ativa");
@@ -230,75 +177,10 @@ async function GiveAccessToFolders(subInfo) {
 }
 //#endregion
 
-//#region DUPLICATES
-function CheckForDuplicatesSubs() {
-	const stringUserID = 'ID do usuário';
-
-	var subsCount = Object.keys(subsJson.toObject()).length;
-
-	for (let i = 0; i < subsCount; i++) {
-		var sub1 = `Assinante${i}`;
-
-		for (let j = 0; j < subsCount; j++) {
-			var sub2 = `Assinante${j}`;
-
-			if (i == j) { continue; }
-			else if (subsJson.get(sub1))
-
-				if (subsJson.get(`${sub1}.${stringUserID}`) == subsJson.get(`${sub2}.${stringUserID}`)) {
-					RemoveInactiveSub(sub1, sub2);
-				}
-		}
-	}
-	if (enableLogs) LogThis(colors.cyan, "Duplicates check done!");
-}
-
-function RemoveInactiveSub(sub1, sub2) {
-	const stringSubStatus = "Status da Assinatura";
-	let inactiveSub;
-
-	if (subsJson.get(`${sub1}.${stringSubStatus}`) != "Ativa") inactiveSub = sub1;
-	if (subsJson.get(`${sub2}.${stringSubStatus}`) != "Ativa") inactiveSub = sub2;
-
-	// Se as duas entradas forem inativas, deixa aquela com o último pagamento mais recente.
-	if (subsJson.get(`${sub1}.${stringSubStatus}`) != "Ativa" && subsJson.get(`${sub2}.${stringSubStatus}`) != "Ativa") {
-		var sub1Payment = GetLastPayment(sub1);
-		var sub2Payment = GetLastPayment(sub2);
-
-		if (sub1Payment < sub2Payment) inactiveSub = sub1;
-		if (sub2Payment < sub1Payment) inactiveSub = sub2;
-	}
-
-	subsJson.unset(`${inactiveSub}`);
-	subsJson.save();
-	subsJson = editJsonFile(path.resolve('./DONT_GIT/currentSubs.json'), {
-		autosave: true,
-	});
-
-	if (enableLogs) LogThis(colors.cyan, `Removed ${inactiveSub} (Duplicate)`);
-}
-
-function GetLastPayment(sub) {
-	const lastPaymentKey = "Data de confirmação da última cobrança";
-
-	var subPayment = subsJson.get(`${sub}.${lastPaymentKey}`);
-	var subData = subPayment.split(' ');
-	subData = subData[0].split('/');
-	var dia = subData[0], mes = subData[1], ano = subData[2];
-	var lastPaymentDate = new Date(ano, --mes, dia);
-
-	return lastPaymentDate;
-}
-//#endregion
-
 exports.UpdateDrive = async function InitBot() {
 	if (enableLogs) LogThis(colors.magenta, 'Updating google drive.');
-	await TransformCsvIntoJson();
 
-	if (enableLogs) LogThis(colors.cyan, 'Checking for duplicates');
-	CheckForDuplicatesSubs();
-
-	if (enableLogs) LogThis(colors.magenta, "Authorizing...");
+	if (enableLogs) LogThis(colors.cyan, "Authorizing...");
 	authClient = await authorize();
 
 	if (enableLogs) LogThis(colors.cyan, "Should be autorized.");

@@ -2,6 +2,7 @@
 const editJsonFile = require('edit-json-file');
 const entraCatarse = require('./js/entraCatarse.js');
 const googleDrive = require('./js/googleDrive.js');
+const subsList = require('./js/subsList.js');
 const { Delay, LogThis, colors } = require('aranha-commons');
 //#endregion
 
@@ -21,6 +22,9 @@ async function InitBot() {
 
     var catarse = await entraCatarse.StartCatarse();
     if (enableLogs) LogThis(colors.cyan, 'Done with catarse.');
+    
+    await subsList.UpdateSubsList();
+    if (enableLogs) LogThis(colors.cyan, 'Finished updating the subs list.');
 
     await googleDrive.UpdateDrive();
     if (enableLogs) LogThis(colors.cyan, 'Done with google drive.');
@@ -39,8 +43,7 @@ async function ProgramCooldown(catarse) {
     ProgramCooldown();
 }
 
-function TesteDoBot() {
-    googleDrive.GoogleDriveTest();
+async function TesteDoBot() {
     ExitProgram();
 }
 

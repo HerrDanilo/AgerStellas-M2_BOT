@@ -24,9 +24,7 @@ var linkCatarseLogin = "https://www.catarse.me/login";
 //#region BASE PUPPETEER METHODS
 async function StartBrowser() {
     if (enableLogs) LogThis(colors.magenta, "Launching browser");
-    const browser = await puppeteer.launch({ 
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        headless: isHeadless });
+    const browser = await puppeteer.launch({ headless: isHeadless });
     const page = await browser.newPage();
     return { browser, page };
 }

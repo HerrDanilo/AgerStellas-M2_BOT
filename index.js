@@ -56,8 +56,7 @@ function SaveLastRuntime() {
 
 async function TesteDoBot() {
     ExitProgram();
-    SaveLastRuntime();
 }
 
-TesteDoBot();
-// InitBot();
+// TesteDoBot();
+InitBot();

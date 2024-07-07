@@ -157,11 +157,11 @@ exports.StartCatarse = async function StartProgram() {
     } 
     else if (page.url() == "https://www.catarse.me/") {
         if (enableLogs) LogThis(colors.green, 'Page url is correct.');
-        let status = await page.goto(linkSubsReport);
+        let status = await page.goto('https://www.amazon.com/');
         console.log(status.status());
         await Delay(10, enableLogs);
         console.log(page.url());
-        await DownloadSubsList(page);
+        // await DownloadSubsList(page);
     }
     return { browser };
 }

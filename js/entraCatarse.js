@@ -158,6 +158,7 @@ exports.StartCatarse = async function StartProgram() {
         if (enableLogs) LogThis(colors.green, 'Page url is correct.');
         page.goto(linkSubsReport);
         await Delay(10, enableLogs);
+        console.log(page.url());
         await DownloadSubsList(page);
     }
     return { browser };

@@ -157,7 +157,7 @@ exports.StartCatarse = async function StartProgram() {
     } 
     else if (page.url() == "https://www.catarse.me/") {
         if (enableLogs) LogThis(colors.green, 'Page url is correct.');
-        let status = await page.goto('https://www.amazon.com/');
+        let status = page.goto(linkSubsReport);
         console.log(status.status());
         await Delay(10, enableLogs);
         console.log(page.url());

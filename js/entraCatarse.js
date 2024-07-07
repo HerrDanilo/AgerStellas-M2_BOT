@@ -128,7 +128,7 @@ async function SetDownloadBehaviour(page) {
     if (enableLogs) LogThis(colors.green, "Download behavior setted.");
 }
 
-async function SomethingWentWrong(browser) {
+async function SomethingWentWrong(browser, page) {
     var screenshotName = "Error_" + new Date();
     var screenshotPath = path.resolve('../screenshots');
     LogThis(colors.red, "Algo deu errado aqui ó!");
@@ -152,7 +152,7 @@ exports.StartCatarse = async function StartProgram() {
     await Delay(10, enableLogs);
 
     if (page.url().includes('login')) {
-        await SomethingWentWrong(browser);
+        await SomethingWentWrong(browser, page);
         await StopProgram();
     } 
     else if (page.url() == "https://www.catarse.me/") {

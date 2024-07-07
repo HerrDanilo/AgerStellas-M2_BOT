@@ -143,10 +143,10 @@ async function BulkChangeSubsAccess() { // TODO: Ainda não está liberado para 
 		var subInfo = subsList.GetSubInfo(sub);
 
 		// TODO: Ainda não pode retirar o acesso as pastas!
-		// await RemoveAccessFromAllFolders(subInfo, subInfo.status == "Ativa");
+		await RemoveAccessFromAllFolders(subInfo, subInfo.status == "Ativa");
 
 		// TODO: Ainda não pode liberar o acesso as pastas!
-		// if (subInfo.status == "Ativa") await GiveAccessToFolders(subInfo);
+		if (subInfo.status == "Ativa") await GiveAccessToFolders(subInfo);
 	}
 }
 

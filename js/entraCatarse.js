@@ -158,7 +158,6 @@ exports.StartCatarse = async function StartProgram() {
     else if (page.url() == "https://www.catarse.me/") {
         if (enableLogs) LogThis(colors.green, 'Page url is correct.');
         await page.goto(linkSubsReport);
-        console.log(page.url());
         await DownloadSubsList(page);
     }
     return { browser };

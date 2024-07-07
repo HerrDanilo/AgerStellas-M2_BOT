@@ -189,8 +189,6 @@ exports.UpdateDrive = async function InitBot() {
 
 exports.GoogleDriveTest = async function GoogleDriveTest() {
 	authClient = await authorize();
-
-	await BulkChangeSubsAccess();
 }
 
 //#region UNUSED METHODS

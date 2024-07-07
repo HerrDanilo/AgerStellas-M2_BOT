@@ -27,7 +27,7 @@ async function InitBot() {
     
     await RepeatBot();
 
-    // await ProgramCooldown(catarse);
+    await ProgramCooldown(catarse);
     
     process.exit(1);
 }
@@ -42,7 +42,7 @@ async function RepeatBot() {
 
 async function ProgramCooldown(catarse) {
     if (enableLogs) LogThis(colors.cyan, "Sleeping... " + new Date());
-    await Delay(900, enableLogs);
+    await Delay(600, enableLogs);
     await entraCatarse.DownloadCooldown(catarse.browser);
     await RepeatBot();
 

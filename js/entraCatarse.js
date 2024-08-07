@@ -24,7 +24,10 @@ var linkCatarseLogin = "https://www.catarse.me/login";
 //#region BASE PUPPETEER METHODS
 async function StartBrowser() {
     if (enableLogs) LogThis(colors.magenta, "Launching browser");
-    const browser = await puppeteer.launch({ headless: isHeadless });
+    const browser = await puppeteer.launch({ 
+        headless: true,
+        args: ['--no-sandbox']
+    });
     const page = await browser.newPage();
     return { browser, page };
 }
@@ -125,7 +128,7 @@ async function SetDownloadBehaviour(page) {
     if (enableLogs) LogThis(colors.green, "Download behavior setted.");
 }
 
-async function SomethingWentWrong(browser) {
+async function SomethingWentWrong(browser, page) {
     var screenshotName = "Error_" + new Date();
     var screenshotPath = path.resolve('../screenshots');
     LogThis(colors.red, "Algo deu errado aqui ó!");
@@ -149,9 +152,10 @@ exports.StartCatarse = async function StartProgram() {
     await Delay(10, enableLogs);
 
     if (page.url().includes('login')) {
-        await SomethingWentWrong(browser);
+        await SomethingWentWrong(browser, page);
         await StopProgram();
-    } else {
+    } 
+    else if (page.url() == "https://www.catarse.me/") {
         if (enableLogs) LogThis(colors.green, 'Page url is correct.');
         await page.goto(linkSubsReport);
         await DownloadSubsList(page);

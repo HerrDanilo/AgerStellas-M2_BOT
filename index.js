@@ -20,27 +20,38 @@ async function ExitProgram() {
 async function InitBot() {
     if (enableLogs) LogThis(colors.green, "Program is starting! - " + new Date());
 
+    SaveLastRuntime();
+
     var catarse = await entraCatarse.StartCatarse();
     if (enableLogs) LogThis(colors.cyan, 'Done with catarse.');
     
+    await RepeatBot();
+
+    await ProgramCooldown(catarse);
+    
+    process.exit(1);
+}
+
+async function RepeatBot() {
     await subsList.UpdateSubsList();
     if (enableLogs) LogThis(colors.cyan, 'Finished updating the subs list.');
-
+    
     await googleDrive.UpdateDrive();
     if (enableLogs) LogThis(colors.cyan, 'Done with google drive.');
-
-    // await ProgramCooldown(catarse);
-
-    process.exit(1);
 }
 
 async function ProgramCooldown(catarse) {
     if (enableLogs) LogThis(colors.cyan, "Sleeping... " + new Date());
-    await Delay(900, enableLogs);
+    await Delay(600, enableLogs);
     await entraCatarse.DownloadCooldown(catarse.browser);
-    await googleDrive.UpdateDrive();
+    await RepeatBot();
 
     ProgramCooldown();
+}
+
+function SaveLastRuntime() {
+    configsJson.set('lastRuntime', new Date());
+    configsJson.save();
 }
 
 async function TesteDoBot() {

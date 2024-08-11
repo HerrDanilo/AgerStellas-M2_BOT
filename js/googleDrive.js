@@ -120,51 +120,55 @@ async function ShareFolder(folder_id, subInfo) {
 	}).catch((err) => console.error(err.errors));
 
 	if (res) {
-		if (enableLogs) LogThis(colors.green, `${subInfo.name} now has access to ${folder_id}`);
+		if (enableLogs) LogThis(colors.green, `${subInfo.email} now has access to ${subInfo.subTier} (${folder_id})`);
 	}
 }
 
-async function UnshareFolder(folder_id, email) {
+async function UnshareFolder(folder_id, subInfo) {
 	const drive = google.drive({ version: "v3", auth: authClient });
 	const res = await drive.permissions.delete({
 		fileId: folder_id,
-		permissionId: await GetPermissionIdFromEmail(email),
+		permissionId: await GetPermissionIdFromEmail(subInfo.email),
 	}).catch((err) => console.error(err.errors));
 
 	if (res) {
-		if (enableLogs) LogThis(colors.red, `Succesfully removed ${email}'s access to ${folder_id}`);
+		if (enableLogs) LogThis(colors.red, `Succesfully removed ${subInfo.email}'s access to ${subInfo.subTier} (${folder_id})`);
 	}
 }
 
-async function BulkChangeSubsAccess() { // TODO: Ainda não está liberado para mudar o acesso das pastas.
+async function BulkChangeSubsAccess() {
 	if (enableLogs) LogThis(colors.magenta, "Bulk changing access.");
+
+	/* TODO: Há um problema pra liberar o acesso pra emails fora da plataforma do google.
+	 * Ou seja, se o email não for @gmail, ou não tiver uma conta do google associada,
+	 * precisaria mandar uma notificação para o usuário.
+	 * 
+	 * ----- MENSAGEM DE ERRO: -----
+	 * Bad Request. User message: "Você está tentando convidar pauloebcamargo@hotmail.com.
+	 * Como não há uma Conta do Google associada a esse endereço de e-mail,
+	 * você precisará selecionar a caixa "Notificar pessoas" para convidar o destinatário."
+	 */
 
 	for (var sub in subsJson.read()) {
 		var subInfo = subsList.GetSubInfo(sub);
 
-		// TODO: Ainda não pode retirar o acesso as pastas!
 		await RemoveAccessFromAllFolders(subInfo, subInfo.status == "Ativa");
 
-		// TODO: Ainda não pode liberar o acesso as pastas!
 		if (subInfo.status == "Ativa") await GiveAccessToFolders(subInfo);
 	}
 }
 
 async function RemoveAccessFromAllFolders(subInfo, isActive) {
-	var sub_permissionId = await GetPermissionIdFromEmail(subInfo.email);
-	let hasAccess;
 	for (var folder in configsJson.get('folders')) {
-		hasAccess = false;
 		var folder_ID = configsJson.get(`folders.${folder}.id`);
+
+		// FIXME: Verificar se o ID da pasta é o mesmo da pasta do sub. (Já que os dois últimos tiers compartilham a mesma pasta)
 
 		if (isActive && (folder == "Recompensas Gerais" || folder == subInfo.subTier)) continue;
 
-		var folderMetadata = (await GetFileMetadataFromID(folder_ID)).permissions;
+		var hasAccess = await UserHasAccessToFolder(subInfo, folder_ID);
 
-		folderMetadata.forEach(async (permission) => {
-			if (permission.id == sub_permissionId) hasAccess = true;
-		});
-		if (hasAccess) await UnshareFolder(folder_ID, subInfo.email);
+		if (hasAccess) await UnshareFolder(folder_ID, subInfo);
 	}
 }
 
@@ -172,8 +176,21 @@ async function GiveAccessToFolders(subInfo) {
 	var generalFolder_ID = configsJson.get('folders.Recompensas Gerais.id');
 	var subTierFolder_ID = GetFolderIdFromSubTier(subInfo.subTier);
 
-	await ShareFolder(generalFolder_ID, subInfo);
-	await ShareFolder(subTierFolder_ID, subInfo);
+	if (!await UserHasAccessToFolder(subInfo, generalFolder_ID)) await ShareFolder(generalFolder_ID, subInfo);
+	if (!await UserHasAccessToFolder(subInfo, subTierFolder_ID)) await ShareFolder(subTierFolder_ID, subInfo);
+}
+
+async function UserHasAccessToFolder(subInfo, folder_ID) {
+	var sub_permissionId = await GetPermissionIdFromEmail(subInfo.email);
+	var hasAccess = false;
+
+	var folderMetadata = (await GetFileMetadataFromID(folder_ID)).permissions;
+
+	folderMetadata.forEach(async (permission) => {
+		if (permission.id == sub_permissionId) hasAccess = true;
+	});
+
+	return hasAccess;
 }
 //#endregion
 
@@ -183,7 +200,7 @@ exports.UpdateDrive = async function InitBot() {
 	if (enableLogs) LogThis(colors.cyan, "Authorizing...");
 	authClient = await authorize();
 
-	if (enableLogs) LogThis(colors.cyan, "Should be autorized.");
+	if (enableLogs) LogThis(colors.cyan, "Should be authorized.");
 	await BulkChangeSubsAccess();
 }
 

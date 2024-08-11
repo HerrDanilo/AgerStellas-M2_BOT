@@ -6,27 +6,63 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
-- [Versão 1.4.0 - 2024-07-04](#versão-140---2024-07-04)
+- [Versão 1.6.7 - 2024-08-11](#versão-167---2024-08-11)
   - [Adicionado](#adicionado)
   - [Modificado](#modificado)
   - [Removido](#removido)
   - [Corrigido](#corrigido)
-- [Versão 1.3.0 - 2024-07-03](#versão-130---2024-07-03)
+- [Versão 1.4.0 - 2024-07-04](#versão-140---2024-07-04)
   - [Adicionado](#adicionado-1)
-  - [Corrigido](#corrigido-1)
-- [Versão 1.2.2 - 2024-06-27](#versão-122---2024-06-27)
-  - [Adicionado](#adicionado-2)
   - [Modificado](#modificado-1)
+  - [Removido](#removido-1)
+  - [Corrigido](#corrigido-1)
+- [Versão 1.3.0 - 2024-07-03](#versão-130---2024-07-03)
+  - [Adicionado](#adicionado-2)
   - [Corrigido](#corrigido-2)
-- [Versão 1.1.0 - 2024-06-19](#versão-110---2024-06-19)
+- [Versão 1.2.2 - 2024-06-27](#versão-122---2024-06-27)
   - [Adicionado](#adicionado-3)
+  - [Modificado](#modificado-2)
+  - [Corrigido](#corrigido-3)
+- [Versão 1.1.0 - 2024-06-19](#versão-110---2024-06-19)
+  - [Adicionado](#adicionado-4)
 - [Versão 1.0.0 - 2024-06-19](#versão-100---2024-06-19)
   - [Ordem das ações](#ordem-das-ações)
 ___
 # Futuras versões
 
-- [ ] Notificar quando algum erro ocorre. (Tem o Error Reporting do próprio google cloud)
-- [ ] Liberar para que o bot consiga mudar o acesso dos assinantes nas pastas.
+- [ ] Notificar quando algum erro ocorre. (Utilizar `try` e `catch` para pegar o erro sem crashar o bot, e então notificar o erro.)
+
+# Versão 1.6.7 - 2024-08-11
+
+## Adicionado
+- Liberado o bot para alterar o acesso as pastas de recompensas. (Ainda não foi tirado o acesso por link direto)
+- Adicionada uma verificação no `StartCatarse()` para confirmar se a página do browser está correta.
+- Adicionado um argumento extra ao inciar o puppeteer. ( -> `--no-sandbox`)
+- Criado o `getLastRuntime.js` para armazenar qual foi a última data e horário que o bot rodou. (É preciso criar logs que contenham mais informações sobre aquela rodagem.)
+- Criado o `UserHasAccessToFolder()` para descobrir se determinado email tem acesso a determinada pasta.
+- No `GiveAccessToFolders()` foi adicionada a verificação do `UserHasAccessToFolder()` para não causar problemas de liberar novamente o acesso para alguém que já tem acesso individual.
+- Novo comentário no `googleDrive.js` pedindo pra fazer uma verificação de ID da pasta antes de retirar o acesso, já que algumas pastas são compartilhadas entre diferentes tiers de assinatura.
+- No `BulkChangeSubsAccess()`, foi adicionado comentário sobre o erro de compartilhar o arquivo com email que não estão vinculados de forma alguma com uma Conta do Google.
+- Adicionado comentário no `entraCatarse.js` para lembrar de usar `try` e `catch` para não crashar o bot.
+- Criado o script `testeDoBot.js` para realizar testes sem o problema de acabar enviado ao repositório.
+- `SaveLastRuntime()` agora printa no console quando ele está salvando a última data/horário. 
+## Modificado
+- Agora o `SomethingWentWrong()` requer o argumento de `page` do puppeteer para poder tirar uma screenshot da página.
+- Diminuido o tempo de espera entre cada atualização do bot. (15 mins -> 10 mins)
+- No `RemoveAccessFromAllFolders()`, agora usa a verificação do `UserHasAccessToFolder()` para saber se o assinante tem acesso aquela pasta no loop.
+- `UnshareFolder()` agora requer `subInfo` ao invés do email direto da pessoa como argumento.
+  - Também alterado o print de retorno para mostrar o tier de assinatura junto do ID da pasta no drive.
+## Removido
+- Retirado o `BulkChangeAccess()` do `GoogleDriveTest()`. (Método de testes do módulo)
+- No `BulkChangeSubsAccess()`, foi removido comentários dizendo que não se pode alterar o acesso as pastas no drive.
+- Retirado `process.exit(1)` do `InitBot()` para que o bot continue rodando sem finalizar.
+- Removido o `ExitProgram()` e o `TesteDoBot()` do `index.js`, e enviado ao novo arquivo `testeDoBot.js` fora do controle de versão.
+## Corrigido
+- Agora o `ProgramCooldown()` usa o `RepeatBot()` ao invés de só atualizar o google drive com `googleDrive.UpdateDrive()`.
+- Arrumado um typo.
+- O print de retorno do `ShareFolder()` agora mostra o email ao invés do nome da pessoa, e mostra o tier de assinatura junto do ID da pasta no drive.
+- Removido um espaço desnecessário num print de console dentro do `DownloadCooldown`.
+- A chamada do `ProgramCooldown()` dentro do próprio método não estava sendo enviada com o argumento `catarse` que o faz funcionar.
 
 ___
 # Versão 1.4.0 - 2024-07-04

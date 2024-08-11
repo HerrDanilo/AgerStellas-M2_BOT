@@ -11,12 +11,6 @@ var configsJson = editJsonFile(`${__dirname}/DONT_GIT/configs.json`);
 var enableLogs = configsJson.get('enableLogs');
 //#endregion
 
-async function ExitProgram() {
-    if (enableLogs) LogThis(colors.red, "Exiting program!");
-    await Delay(5, enableLogs);
-    process.exit(1);
-}
-
 async function InitBot() {
     if (enableLogs) LogThis(colors.green, "Program is starting! - " + new Date());
 
@@ -28,8 +22,6 @@ async function InitBot() {
     await RepeatBot();
 
     await ProgramCooldown(catarse);
-    
-    process.exit(1);
 }
 
 async function RepeatBot() {
@@ -46,17 +38,14 @@ async function ProgramCooldown(catarse) {
     await entraCatarse.DownloadCooldown(catarse.browser);
     await RepeatBot();
 
-    ProgramCooldown();
+    ProgramCooldown(catarse);
 }
 
 function SaveLastRuntime() {
-    configsJson.set('lastRuntime', new Date());
+    var lastRuntime = new Date();
+    LogThis(colors.green, `Saving lastRuntime at ${lastRuntime}`);
+    configsJson.set('lastRuntime', lastRuntime);
     configsJson.save();
 }
 
-async function TesteDoBot() {
-    ExitProgram();
-}
-
-// TesteDoBot();
 InitBot();

@@ -116,7 +116,7 @@ exports.DownloadCooldown = async function DownloadCooldown(browser) {
     if (page.url() == linkSubsReport) {
         await DownloadSubsList(page);
     }
-    else LogThis(colors.red, "Algo deu errado ao sair do cooldown. \nLink da página: " + page.url());
+    else LogThis(colors.red, "Algo deu errado ao sair do cooldown.\nLink da página: " + page.url());
 }
 
 async function SetDownloadBehaviour(page) {
@@ -138,6 +138,7 @@ async function SomethingWentWrong(browser, page) {
 
 async function StopProgram() {
     // TODO: Ter um jeito de avisar que o programa deu erro, seja no discord, email ou seja lá qual forma for.
+    // Usar try & catch pra n crashar o bot.
     await Delay(5, enableLogs);
     process.exit(1);
 }

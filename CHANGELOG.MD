@@ -6,23 +6,26 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
+- [Versão 1.6.8 - 2024-08-12](#versão-168---2024-08-12)
+  - [Modificado](#modificado)
+  - [Corrigido](#corrigido)
 - [Versão 1.6.7 - 2024-08-11](#versão-167---2024-08-11)
   - [Adicionado](#adicionado)
-  - [Modificado](#modificado)
+  - [Modificado](#modificado-1)
   - [Removido](#removido)
-  - [Corrigido](#corrigido)
+  - [Corrigido](#corrigido-1)
 - [Versão 1.4.0 - 2024-07-04](#versão-140---2024-07-04)
   - [Adicionado](#adicionado-1)
-  - [Modificado](#modificado-1)
+  - [Modificado](#modificado-2)
   - [Removido](#removido-1)
-  - [Corrigido](#corrigido-1)
+  - [Corrigido](#corrigido-2)
 - [Versão 1.3.0 - 2024-07-03](#versão-130---2024-07-03)
   - [Adicionado](#adicionado-2)
-  - [Corrigido](#corrigido-2)
+  - [Corrigido](#corrigido-3)
 - [Versão 1.2.2 - 2024-06-27](#versão-122---2024-06-27)
   - [Adicionado](#adicionado-3)
-  - [Modificado](#modificado-2)
-  - [Corrigido](#corrigido-3)
+  - [Modificado](#modificado-3)
+  - [Corrigido](#corrigido-4)
 - [Versão 1.1.0 - 2024-06-19](#versão-110---2024-06-19)
   - [Adicionado](#adicionado-4)
 - [Versão 1.0.0 - 2024-06-19](#versão-100---2024-06-19)
@@ -31,6 +34,14 @@ ___
 # Futuras versões
 
 - [ ] Notificar quando algum erro ocorre. (Utilizar `try` e `catch` para pegar o erro sem crashar o bot, e então notificar o erro.)
+- [ ] Aparentemente houve algum erro ao converter o arquivo `csv` em `json`, mas só ocorreu uma vez e não mais.
+
+# Versão 1.6.8 - 2024-08-12
+
+## Modificado
+- Diminuído o tempo da tentativa de baixar o novo arquivo `csv`. (30s -> 20s).
+## Corrigido
+- Antes de remover o acesso do assinante a pasta do drive, agora o bot verifica se a pasta atual do loop tem o mesmo id que a pasta de recompensas do assinante.
 
 # Versão 1.6.7 - 2024-08-11
 

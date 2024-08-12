@@ -162,9 +162,10 @@ async function RemoveAccessFromAllFolders(subInfo, isActive) {
 	for (var folder in configsJson.get('folders')) {
 		var folder_ID = configsJson.get(`folders.${folder}.id`);
 
-		// FIXME: Verificar se o ID da pasta é o mesmo da pasta do sub. (Já que os dois últimos tiers compartilham a mesma pasta)
-
-		if (isActive && (folder == "Recompensas Gerais" || folder == subInfo.subTier)) continue;
+		if (isActive && (folder == "Recompensas Gerais" ||
+						 folder == subInfo.subTier ||
+						 folder_ID == configsJson.get(`folders.${subInfo.subTier}.id`)
+						)) continue;
 
 		var hasAccess = await UserHasAccessToFolder(subInfo, folder_ID);
 

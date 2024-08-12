@@ -23,25 +23,28 @@ var enableLogs = configsJson.get('enableLogs');
 //#region CSV => JSON
 async function CSVToJson() {
 	await RemoveAndRenameCSVFile();
-    await TransformCsvIntoJson();
+	await TransformCsvIntoJson();
 }
 
 async function RemoveAndRenameCSVFile() {
 	if (enableLogs) LogThis(colors.magenta, 'Removing older CSV file.');
-    var csvToRemove = path.resolve(`${csvDownloadPath}/Base_de_Assinantes.csv`);
+	var csvToRemove = path.resolve(`${csvDownloadPath}/Base_de_Assinantes.csv`);
 	if (fs.existsSync(csvToRemove)) fs.unlinkSync(csvToRemove);
-	
+
 	await Delay(5, enableLogs);
 
 	if (enableLogs) LogThis(colors.magenta, 'Renaming newer CSV file.');
-    var fileToRename = fs.readdirSync(csvDownloadPath)[0];
-    fs.rename(`${csvDownloadPath}/${fileToRename}`, `${csvDownloadPath}/Base_de_Assinantes.csv`, function (err) {
-        if (err) LogThis(colors.red, 'ERROR: ' + err);
-    });
+	var fileToRename = fs.readdirSync(csvDownloadPath)[0];
+	fs.rename(`${csvDownloadPath}/${fileToRename}`, `${csvDownloadPath}/Base_de_Assinantes.csv`, function (err) {
+		if (err) LogThis(colors.red, 'ERROR: ' + err);
+	});
 }
 
 async function TransformCsvIntoJson() {
 	if (enableLogs) LogThis(colors.magenta, 'Transforming Csv file to Json.');
+	/* FIXME: Houve um erro logo após esse `LogThis`.
+	 * Message: "File does not exist. Check to make sure the file path to your csv is correct."
+	 */
 	let index = 0;
 
 	subsJson.empty();
@@ -154,13 +157,13 @@ exports.GetSubInfo = function GetSubInfo(sub, debugShow) {
 }
 
 exports.UpdateSubsList = async function UpdateSubsList() {
-    if (enableLogs) LogThis(colors.magenta, "Updating subs list.");
+	if (enableLogs) LogThis(colors.magenta, "Updating subs list.");
 
-    // Handle CSV
-    if (enableLogs) LogThis(colors.cyan, 'Transforming CSV => JSON');
+	// Handle CSV
+	if (enableLogs) LogThis(colors.cyan, 'Transforming CSV => JSON');
 	await CSVToJson();
 
-    // Handle duplicates
-    if (enableLogs) LogThis(colors.cyan, 'Checking for duplicates');
-    CheckForDuplicatesSubs();
+	// Handle duplicates
+	if (enableLogs) LogThis(colors.cyan, 'Checking for duplicates');
+	CheckForDuplicatesSubs();
 }

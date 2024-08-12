@@ -38,5 +38,5 @@ O bot de AgerStellas foi criado com a intenção de auxiliar a equipe de produç
 ___
 # Última atualização
 
-A última versão do Bot é a `1.6.7`.
+A última versão do Bot é a `1.6.8`.
 Para mais detalhes, visite o [Changelog](CHANGELOG.MD).

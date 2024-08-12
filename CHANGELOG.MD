@@ -2,21 +2,25 @@
 
 Todas as mudanças neste projeto estarão documentadas neste arquivo.
 
+Caso queira ver mais detalhes sobre o propósito deste projeto, visite o [ReadMe](./README.MD).
+
 O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
-- [Versão 1.6.8 - 2024-08-12](#versão-168---2024-08-12)
+- [Versão 1.6.9 - 2024-08-12](#versão-169---2024-08-12)
   - [Modificado](#modificado)
+- [Versão 1.6.8 - 2024-08-12](#versão-168---2024-08-12)
+  - [Modificado](#modificado-1)
   - [Corrigido](#corrigido)
 - [Versão 1.6.7 - 2024-08-11](#versão-167---2024-08-11)
   - [Adicionado](#adicionado)
-  - [Modificado](#modificado-1)
+  - [Modificado](#modificado-2)
   - [Removido](#removido)
   - [Corrigido](#corrigido-1)
 - [Versão 1.4.0 - 2024-07-04](#versão-140---2024-07-04)
   - [Adicionado](#adicionado-1)
-  - [Modificado](#modificado-2)
+  - [Modificado](#modificado-3)
   - [Removido](#removido-1)
   - [Corrigido](#corrigido-2)
 - [Versão 1.3.0 - 2024-07-03](#versão-130---2024-07-03)
@@ -24,7 +28,7 @@ e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/
   - [Corrigido](#corrigido-3)
 - [Versão 1.2.2 - 2024-06-27](#versão-122---2024-06-27)
   - [Adicionado](#adicionado-3)
-  - [Modificado](#modificado-3)
+  - [Modificado](#modificado-4)
   - [Corrigido](#corrigido-4)
 - [Versão 1.1.0 - 2024-06-19](#versão-110---2024-06-19)
   - [Adicionado](#adicionado-4)
@@ -36,15 +40,18 @@ ___
 - [ ] Notificar quando algum erro ocorre. (Utilizar `try` e `catch` para pegar o erro sem crashar o bot, e então notificar o erro.)
 - [ ] Aparentemente houve algum erro ao converter o arquivo `csv` em `json`, mas só ocorreu uma vez e não mais.
 
+# Versão 1.6.9 - 2024-08-12
+## Modificado
+- Ao mandar uma mensagem de confirmação da alteração de acesso do assinante a alguma pasta, era mencionada o nome da pasta de recompensa do assinante, e não a qual ele havia perdido/ganhado acesso.
+  - Agora deve mostrar corretamente qual o nome da pasta que sofreu a alteração.
+___
 # Versão 1.6.8 - 2024-08-12
-
 ## Modificado
 - Diminuído o tempo da tentativa de baixar o novo arquivo `csv`. (30s -> 20s).
 ## Corrigido
 - Antes de remover o acesso do assinante a pasta do drive, agora o bot verifica se a pasta atual do loop tem o mesmo id que a pasta de recompensas do assinante.
-
+___
 # Versão 1.6.7 - 2024-08-11
-
 ## Adicionado
 - Liberado o bot para alterar o acesso as pastas de recompensas. (Ainda não foi tirado o acesso por link direto)
 - Adicionada uma verificação no `StartCatarse()` para confirmar se a página do browser está correta.
@@ -74,7 +81,6 @@ ___
 - O print de retorno do `ShareFolder()` agora mostra o email ao invés do nome da pessoa, e mostra o tier de assinatura junto do ID da pasta no drive.
 - Removido um espaço desnecessário num print de console dentro do `DownloadCooldown`.
 - A chamada do `ProgramCooldown()` dentro do próprio método não estava sendo enviada com o argumento `catarse` que o faz funcionar.
-
 ___
 # Versão 1.4.0 - 2024-07-04
 ## Adicionado

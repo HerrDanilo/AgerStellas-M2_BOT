@@ -106,7 +106,7 @@ function AddToNotificationJson(subId) {
 //#endregion
 
 //#region CHANGING SUBS ACCESS
-async function ShareFolder(folder_id, subInfo) {
+async function ShareFolder(folder_id, subInfo, folderName) {
 	const drive = google.drive({ version: "v3", auth: authClient });
 	const res = await drive.permissions.create({
 		requestBody: {
@@ -120,11 +120,11 @@ async function ShareFolder(folder_id, subInfo) {
 	}).catch((err) => console.error(err.errors));
 
 	if (res) {
-		if (enableLogs) LogThis(colors.green, `${subInfo.email} now has access to ${subInfo.subTier} (${folder_id})`);
+		if (enableLogs) LogThis(colors.green, `${subInfo.email} now has access to ${folderName} (${folder_id})`);
 	}
 }
 
-async function UnshareFolder(folder_id, subInfo) {
+async function UnshareFolder(folder_id, subInfo, folderName) {
 	const drive = google.drive({ version: "v3", auth: authClient });
 	const res = await drive.permissions.delete({
 		fileId: folder_id,
@@ -132,7 +132,7 @@ async function UnshareFolder(folder_id, subInfo) {
 	}).catch((err) => console.error(err.errors));
 
 	if (res) {
-		if (enableLogs) LogThis(colors.red, `Succesfully removed ${subInfo.email}'s access to ${subInfo.subTier} (${folder_id})`);
+		if (enableLogs) LogThis(colors.red, `Succesfully removed ${subInfo.email}'s access to ${folderName} (${folder_id})`);
 	}
 }
 
@@ -169,7 +169,7 @@ async function RemoveAccessFromAllFolders(subInfo, isActive) {
 
 		var hasAccess = await UserHasAccessToFolder(subInfo, folder_ID);
 
-		if (hasAccess) await UnshareFolder(folder_ID, subInfo);
+		if (hasAccess) await UnshareFolder(folder_ID, subInfo, folder);
 	}
 }
 
@@ -177,8 +177,8 @@ async function GiveAccessToFolders(subInfo) {
 	var generalFolder_ID = configsJson.get('folders.Recompensas Gerais.id');
 	var subTierFolder_ID = GetFolderIdFromSubTier(subInfo.subTier);
 
-	if (!await UserHasAccessToFolder(subInfo, generalFolder_ID)) await ShareFolder(generalFolder_ID, subInfo);
-	if (!await UserHasAccessToFolder(subInfo, subTierFolder_ID)) await ShareFolder(subTierFolder_ID, subInfo);
+	if (!await UserHasAccessToFolder(subInfo, generalFolder_ID)) await ShareFolder(generalFolder_ID, subInfo, "Recompensas Gerais");
+	if (!await UserHasAccessToFolder(subInfo, subTierFolder_ID)) await ShareFolder(subTierFolder_ID, subInfo, subInfo.subTier);
 }
 
 async function UserHasAccessToFolder(subInfo, folder_ID) {

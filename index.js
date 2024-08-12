@@ -35,6 +35,8 @@ async function RepeatBot() {
 async function ProgramCooldown(catarse) {
     if (enableLogs) LogThis(colors.cyan, "Sleeping... " + new Date());
     await Delay(600, enableLogs);
+    if (enableLogs) LogThis(colors.cyan, "Waking up...");
+    SaveLastRuntime();
     await entraCatarse.DownloadCooldown(catarse.browser);
     await RepeatBot();
 
@@ -43,7 +45,7 @@ async function ProgramCooldown(catarse) {
 
 function SaveLastRuntime() {
     var lastRuntime = new Date();
-    LogThis(colors.green, `Saving lastRuntime at ${lastRuntime}`);
+    LogThis(colors.green, `Saving lastRuntime as ${lastRuntime}`);
     configsJson.set('lastRuntime', lastRuntime);
     configsJson.save();
 }

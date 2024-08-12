@@ -8,19 +8,21 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
-- [Versão 1.6.9 - 2024-08-12](#versão-169---2024-08-12)
+- [Versão 1.6.10 - 2024-08-12](#versão-1610---2024-08-12)
   - [Modificado](#modificado)
-- [Versão 1.6.8 - 2024-08-12](#versão-168---2024-08-12)
+- [Versão 1.6.9 - 2024-08-12](#versão-169---2024-08-12)
   - [Modificado](#modificado-1)
+- [Versão 1.6.8 - 2024-08-12](#versão-168---2024-08-12)
+  - [Modificado](#modificado-2)
   - [Corrigido](#corrigido)
 - [Versão 1.6.7 - 2024-08-11](#versão-167---2024-08-11)
   - [Adicionado](#adicionado)
-  - [Modificado](#modificado-2)
+  - [Modificado](#modificado-3)
   - [Removido](#removido)
   - [Corrigido](#corrigido-1)
 - [Versão 1.4.0 - 2024-07-04](#versão-140---2024-07-04)
   - [Adicionado](#adicionado-1)
-  - [Modificado](#modificado-3)
+  - [Modificado](#modificado-4)
   - [Removido](#removido-1)
   - [Corrigido](#corrigido-2)
 - [Versão 1.3.0 - 2024-07-03](#versão-130---2024-07-03)
@@ -28,7 +30,7 @@ e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/
   - [Corrigido](#corrigido-3)
 - [Versão 1.2.2 - 2024-06-27](#versão-122---2024-06-27)
   - [Adicionado](#adicionado-3)
-  - [Modificado](#modificado-4)
+  - [Modificado](#modificado-5)
   - [Corrigido](#corrigido-4)
 - [Versão 1.1.0 - 2024-06-19](#versão-110---2024-06-19)
   - [Adicionado](#adicionado-4)
@@ -40,6 +42,11 @@ ___
 - [ ] Notificar quando algum erro ocorre. (Utilizar `try` e `catch` para pegar o erro sem crashar o bot, e então notificar o erro.)
 - [ ] Aparentemente houve algum erro ao converter o arquivo `csv` em `json`, mas só ocorreu uma vez e não mais.
 
+# Versão 1.6.10 - 2024-08-12
+## Modificado
+- Agora o bot avisa quando começa a rodar novamente.
+  - Junto disso, ele salva o novo horário de rodagem para o `getLastRuntime.js`.
+___
 # Versão 1.6.9 - 2024-08-12
 ## Modificado
 - Ao mandar uma mensagem de confirmação da alteração de acesso do assinante a alguma pasta, era mencionada o nome da pasta de recompensa do assinante, e não a qual ele havia perdido/ganhado acesso.

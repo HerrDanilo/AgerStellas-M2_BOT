@@ -1,11 +1,12 @@
 //#region IMPORTS
 const path = require("path");
 const fs = require("fs").promises;
+const logging = require('./logging.js');
 const { google } = require("googleapis");
+const subsList = require('./subsList.js');
 const editJsonFile = require("edit-json-file");
 const { LogThis, colors } = require("aranha-commons");
 const { authenticate } = require("@google-cloud/local-auth");
-const subsList = require('./subsList.js');
 //#endregion
 
 //#region GOOGLE API VARIABLES
@@ -117,7 +118,7 @@ async function ShareFolder(folder_id, subInfo, folderName) {
 		fileId: folder_id,
 		sendNotificationEmail: false, // TODO: Notificar somente na primeira vez que o usuário é adicionado.
 		fields: "*",
-	}).catch((err) => console.error(err.errors));
+	}).catch((err) => logging.NewError(err.errors));
 
 	if (res) {
 		if (enableLogs) LogThis(colors.green, `${subInfo.email} now has access to ${folderName} (${folder_id})`);
@@ -129,7 +130,7 @@ async function UnshareFolder(folder_id, subInfo, folderName) {
 	const res = await drive.permissions.delete({
 		fileId: folder_id,
 		permissionId: await GetPermissionIdFromEmail(subInfo.email),
-	}).catch((err) => console.error(err.errors));
+	}).catch((err) => logging.NewError(err.errors));
 
 	if (res) {
 		if (enableLogs) LogThis(colors.red, `Succesfully removed ${subInfo.email}'s access to ${folderName} (${folder_id})`);

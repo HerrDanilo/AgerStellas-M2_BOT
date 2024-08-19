@@ -8,58 +8,49 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
+- [Versão 1.7.0 - 2024-08-19](#versão-170---2024-08-19)
 - [Versão 1.6.10 - 2024-08-12](#versão-1610---2024-08-12)
-  - [Modificado](#modificado)
 - [Versão 1.6.9 - 2024-08-12](#versão-169---2024-08-12)
-  - [Modificado](#modificado-1)
 - [Versão 1.6.8 - 2024-08-12](#versão-168---2024-08-12)
-  - [Modificado](#modificado-2)
-  - [Corrigido](#corrigido)
 - [Versão 1.6.7 - 2024-08-11](#versão-167---2024-08-11)
-  - [Adicionado](#adicionado)
-  - [Modificado](#modificado-3)
-  - [Removido](#removido)
-  - [Corrigido](#corrigido-1)
 - [Versão 1.4.0 - 2024-07-04](#versão-140---2024-07-04)
-  - [Adicionado](#adicionado-1)
-  - [Modificado](#modificado-4)
-  - [Removido](#removido-1)
-  - [Corrigido](#corrigido-2)
 - [Versão 1.3.0 - 2024-07-03](#versão-130---2024-07-03)
-  - [Adicionado](#adicionado-2)
-  - [Corrigido](#corrigido-3)
 - [Versão 1.2.2 - 2024-06-27](#versão-122---2024-06-27)
-  - [Adicionado](#adicionado-3)
-  - [Modificado](#modificado-5)
-  - [Corrigido](#corrigido-4)
 - [Versão 1.1.0 - 2024-06-19](#versão-110---2024-06-19)
-  - [Adicionado](#adicionado-4)
 - [Versão 1.0.0 - 2024-06-19](#versão-100---2024-06-19)
-  - [Ordem das ações](#ordem-das-ações)
 ___
 # Futuras versões
 
 - [ ] Notificar quando algum erro ocorre. (Utilizar `try` e `catch` para pegar o erro sem crashar o bot, e então notificar o erro.)
 - [ ] Aparentemente houve algum erro ao converter o arquivo `csv` em `json`, mas só ocorreu uma vez e não mais.
 
+# Versão 1.7.0 - 2024-08-19
+**Adicionado**
+- Criado sistema básico para registro de eventos.
+  - Inicialmente é registrado novas rodagens, e alguns possíveis erros, mas não todos.
+
+**Modificado**
+- A tabela de conteúdo do `CHANGELOG` agora está mais enxuta.
+
 # Versão 1.6.10 - 2024-08-12
-## Modificado
+**Modificado**
 - Agora o bot avisa quando começa a rodar novamente.
   - Junto disso, ele salva o novo horário de rodagem para o `getLastRuntime.js`.
-___
+
 # Versão 1.6.9 - 2024-08-12
-## Modificado
+**Modificado**
 - Ao mandar uma mensagem de confirmação da alteração de acesso do assinante a alguma pasta, era mencionada o nome da pasta de recompensa do assinante, e não a qual ele havia perdido/ganhado acesso.
   - Agora deve mostrar corretamente qual o nome da pasta que sofreu a alteração.
-___
+
 # Versão 1.6.8 - 2024-08-12
-## Modificado
+**Modificado**
 - Diminuído o tempo da tentativa de baixar o novo arquivo `csv`. (30s -> 20s).
-## Corrigido
+
+**Corrigido**
 - Antes de remover o acesso do assinante a pasta do drive, agora o bot verifica se a pasta atual do loop tem o mesmo id que a pasta de recompensas do assinante.
-___
+
 # Versão 1.6.7 - 2024-08-11
-## Adicionado
+**Adicionado**
 - Liberado o bot para alterar o acesso as pastas de recompensas. (Ainda não foi tirado o acesso por link direto)
 - Adicionada uma verificação no `StartCatarse()` para confirmar se a página do browser está correta.
 - Adicionado um argumento extra ao inciar o puppeteer. ( -> `--no-sandbox`)
@@ -71,54 +62,63 @@ ___
 - Adicionado comentário no `entraCatarse.js` para lembrar de usar `try` e `catch` para não crashar o bot.
 - Criado o script `testeDoBot.js` para realizar testes sem o problema de acabar enviado ao repositório.
 - `SaveLastRuntime()` agora printa no console quando ele está salvando a última data/horário. 
-## Modificado
+
+**Modificado**
 - Agora o `SomethingWentWrong()` requer o argumento de `page` do puppeteer para poder tirar uma screenshot da página.
 - Diminuido o tempo de espera entre cada atualização do bot. (15 mins -> 10 mins)
 - No `RemoveAccessFromAllFolders()`, agora usa a verificação do `UserHasAccessToFolder()` para saber se o assinante tem acesso aquela pasta no loop.
 - `UnshareFolder()` agora requer `subInfo` ao invés do email direto da pessoa como argumento.
   - Também alterado o print de retorno para mostrar o tier de assinatura junto do ID da pasta no drive.
-## Removido
+
+**Removido**
 - Retirado o `BulkChangeAccess()` do `GoogleDriveTest()`. (Método de testes do módulo)
 - No `BulkChangeSubsAccess()`, foi removido comentários dizendo que não se pode alterar o acesso as pastas no drive.
 - Retirado `process.exit(1)` do `InitBot()` para que o bot continue rodando sem finalizar.
 - Removido o `ExitProgram()` e o `TesteDoBot()` do `index.js`, e enviado ao novo arquivo `testeDoBot.js` fora do controle de versão.
-## Corrigido
+
+**Corrigido**
 - Agora o `ProgramCooldown()` usa o `RepeatBot()` ao invés de só atualizar o google drive com `googleDrive.UpdateDrive()`.
 - Arrumado um typo.
 - O print de retorno do `ShareFolder()` agora mostra o email ao invés do nome da pessoa, e mostra o tier de assinatura junto do ID da pasta no drive.
 - Removido um espaço desnecessário num print de console dentro do `DownloadCooldown`.
 - A chamada do `ProgramCooldown()` dentro do próprio método não estava sendo enviada com o argumento `catarse` que o faz funcionar.
-___
+
 # Versão 1.4.0 - 2024-07-04
-## Adicionado
+**Adicionado**
   - Criado novo arquivo `subsList.js`, sendo responsável pelo tratamento dos arquivos `csv` e métodos gerais relacionados a lista de assinantes.
   - Adicionada a chamada dos métodos no `subsList.js` ao `InitBot()` no `index.js`.
-## Modificado
+
+**Modificado**
   - Alguns métodos foram levados para o arquivo `subsList.js`:
     - Como o `TransformCsvIntoJson()`, `GetSubInfo()`, e os métodos relacionados a checagem de duplicatas nas lista de assinantes. (Antes era do `googleDrive.js`)
     - E o `RemoveAndRenameCSVFile()` do `entraCatarse.js`.
   - Limitado a quantidade de tentativas para baixar a nova lista de assinantes para 5.
   - Agora o `TryToDownloadListFile()` não precisa mais do caminho para a pasta `csv`.
-## Removido
+
+**Removido**
   - Removida importações não mais usadas no `googleDrive.js`.
-## Corrigido
+
+**Corrigido**
   - Antes o programa não baixava a nova lista de assinantes caso a pasta `csv` estivesse vazia.
-___
+
 # Versão 1.3.0 - 2024-07-03
-## Adicionado
+**Adicionado**
   - Adicionada informações no `package.json` para a implantação no Google Cloud Run.
-## Corrigido
+
+**Corrigido**
   - Corrigida a requisição da variável `isHeadless` no `entraCatarse.js`.
   - Agora o programa deve esperar a alteração de permissões no Google Drive terminar antes de entrar em dormência.
   - Mais tentativas de baixar o arquivo `csv` da lista de assinantes até o arquivo ser baixado.
   - Corrigido erros de digitação no [README](README.MD).
-___
+
 # Versão 1.2.2 - 2024-06-27
-## Adicionado
+**Adicionado**
   - Notificar os assinantes por email somente na primeira vez que disponibilizar o acesso.
-## Modificado
+
+**Modificado**
   - Agora é possível obter o id de assinante usando `GetSubInfo()`.
-## Corrigido
+
+**Corrigido**
   - Adicionada uma verificação final nas duplicatas.
     - Caso ambas as duplicatas estejam inativas, mantenha o registro somente da com o último pagamento mais recente.
   - Agora primeiro retira o acesso dos assinantes as pastas.
@@ -126,15 +126,15 @@ ___
     - **Se Ativo:** Retirar o acesso de todas as pastas, exceto a de Recompensas Gerais, e a respectiva do seu nível de assinatura.
     - **Se *NÃO* Ativo:** Retira o acesso de ***TODAS*** as pastas.
   - E então libera o acesso **SE ESTIVER ATIVO** a pasta de Recompensas Gerais, e do seu nível.
-___
+
 # Versão 1.1.0 - 2024-06-19
-## Adicionado
+**Adicionado**
   - Opção para habilitar ou não as mensagens no terminal.
-___
+
 # Versão 1.0.0 - 2024-06-19
 Essa é a versão inicial do Bot, contendo a automação da autorização dos assinantes do Catarse para o Google Drive.
 
-## Ordem das ações
+**Ordem das ações**
   - Entra no Catarse.
     - Solicita a lista atualizada dos assinantes.
     - Baixa a lista em `csv`.

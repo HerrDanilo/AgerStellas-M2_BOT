@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require("path");
 const puppeteer = require("puppeteer");
+const logging = require('./logging.js');
 const editJsonFile = require('edit-json-file');
 const { Delay, LogThis, colors } = require("aranha-commons");
 //#endregion
@@ -24,7 +25,7 @@ var linkCatarseLogin = "https://www.catarse.me/login";
 //#region BASE PUPPETEER METHODS
 async function StartBrowser() {
     if (enableLogs) LogThis(colors.magenta, "Launching browser");
-    const browser = await puppeteer.launch({ 
+    const browser = await puppeteer.launch({
         headless: true,
         args: ['--no-sandbox']
     });
@@ -91,8 +92,13 @@ async function DownloadSubsList(page) {
         if (enableLogs) LogThis(colors.magenta, downloadAttempts + ".Trying to download latest .csv file.");
         await TryToDownloadListFile(page);
         csvFolder = fs.readdirSync(csvDownloadPath); // Read the folder contents again.
-        if (downloadAttempts >= 5) break;
+        if (downloadAttempts >= 5) {
+            logging.NewError("Reached max attempts to download .csv file.");
+            break;
+        }
     }
+
+    logging.UpdateCurrentRuntime(logging.runtimeKeys.downloadAttempts, downloadAttempts);
 
     if (enableLogs) LogThis(colors.green, "Download done!");
 
@@ -116,7 +122,9 @@ exports.DownloadCooldown = async function DownloadCooldown(browser) {
     if (page.url() == linkSubsReport) {
         await DownloadSubsList(page);
     }
-    else LogThis(colors.red, "Algo deu errado ao sair do cooldown.\nLink da página: " + page.url());
+    else {
+        logging.NewError(`Algo deu errado ao sair do cooldown.\nlink: ${page.url()}`);
+    }
 }
 
 async function SetDownloadBehaviour(page) {
@@ -132,6 +140,7 @@ async function SomethingWentWrong(browser, page) {
     var screenshotName = "Error_" + new Date();
     var screenshotPath = path.resolve('../screenshots');
     LogThis(colors.red, "Algo deu errado aqui ó!");
+    logging.NewError(`Houve um erro ao logar no catarse, verifique a print para mais informações.\n ${screenshotName}`);
     await page.screenshot({ path: `${screenshotPath}/${screenshotName}` });
     browser.close();
 }
@@ -155,7 +164,7 @@ exports.StartCatarse = async function StartProgram() {
     if (page.url().includes('login')) {
         await SomethingWentWrong(browser, page);
         await StopProgram();
-    } 
+    }
     else if (page.url() == "https://www.catarse.me/") {
         if (enableLogs) LogThis(colors.green, 'Page url is correct.');
         await page.goto(linkSubsReport);

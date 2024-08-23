@@ -8,6 +8,7 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
+- [Versão 1.7.1 - 2024-08-23](#versão-171---2024-08-23)
 - [Versão 1.7.0 - 2024-08-19](#versão-170---2024-08-19)
 - [Versão 1.6.10 - 2024-08-12](#versão-1610---2024-08-12)
 - [Versão 1.6.9 - 2024-08-12](#versão-169---2024-08-12)
@@ -23,6 +24,11 @@ ___
 
 - [ ] Notificar quando algum erro ocorre. (Utilizar `try` e `catch` para pegar o erro sem crashar o bot, e então notificar o erro.)
 - [ ] Aparentemente houve algum erro ao converter o arquivo `csv` em `json`, mas só ocorreu uma vez e não mais.
+
+# Versão 1.7.1 - 2024-08-23
+**Modificado**
+- Antes de criar um novo arquivo de log, verifica se há uma pasta logs no diretório.
+  - Caso não tenha, crie a pasta.
 
 # Versão 1.7.0 - 2024-08-19
 **Adicionado**

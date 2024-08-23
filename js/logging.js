@@ -51,9 +51,12 @@ function ResetLogFile() {
 
 function CreateLogFile(jsonName) {
 	LogThis(colors.green, `Creating log file for ${appNameVersion}`);
-
+	
+	if (!fs.existsSync(path_logsFolder)) {
+		fs.mkdirSync(path_logsFolder);
+	}
+	
 	loggingJson = editJsonFile(`${path_logsFolder}/${jsonName}`);
-
 	ResetLogFile();
 }
 
@@ -88,7 +91,7 @@ function GetCurrentRuntime() {
 	return { key, value };
 }
 
-function NewRuntime() {	
+function NewRuntime() {
 	var currentRuntime = GetCurrentRuntime();
 	loggingJson.set(`${currentRuntime.key}.${runtimeKeys.initialTime}`, GetTime());
 	loggingJson.set(`${currentRuntime.key}.${runtimeKeys.finalTime}`, "");
@@ -99,7 +102,7 @@ function NewRuntime() {
 
 function FinishCurrentRuntime(execCode) {
 	var currentRuntime = GetCurrentRuntime();
-	
+
 	loggingJson.set(`${currentRuntime.key}.${runtimeKeys.execCode}`, execCode ? execCode : 200);
 	loggingJson.set(`${currentRuntime.key}.${runtimeKeys.finalTime}`, GetTime());
 	loggingJson.set(key_runtimeAmount, ++currentRuntime.value);

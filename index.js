@@ -37,7 +37,7 @@ async function RepeatBot() {
 async function ProgramCooldown(catarse) {
     if (enableLogs) LogThis(colors.cyan, "Sleeping... " + new Date());
     logging.FinishCurrentRuntime();
-    await Delay(600, enableLogs);
+    await Delay(300, enableLogs);
     
     if (enableLogs) LogThis(colors.cyan, "Waking up...");
     SaveLastRuntime();

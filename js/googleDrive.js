@@ -157,6 +157,7 @@ async function BulkChangeSubsAccess() {
 
 		if (subInfo.status == "Ativa") await GiveAccessToFolders(subInfo);
 	}
+	await UpdateSubsTxtFile();
 }
 
 async function RemoveAccessFromAllFolders(subInfo, isActive) {
@@ -196,6 +197,26 @@ async function UserHasAccessToFolder(subInfo, folder_ID) {
 }
 //#endregion
 
+async function UpdateSubsTxtFile() {
+	if (enableLogs) LogThis(colors.cyan, "Updating 'Assinantes.txt'...");
+	subsList.UpdateSubTxtFile();
+	var fileId = configsJson.get("apoiadores.fileId");
+	var filePath = path.resolve('./DONT_GIT/Apoiadores.txt');
+
+	const drive = google.drive({ version: "v3", auth: authClient });
+	const res = await drive.files.update({
+		fileId: `${fileId}`,
+		media: {
+			mimeType: "text/plain",
+			body: (await fs.readFile(filePath)).toString(),
+		}
+	}).catch((err) => logging.NewError(err.errors));
+
+	if (res) {
+		if (enableLogs) LogThis(colors.green, "Success");
+	}
+}
+
 exports.UpdateDrive = async function InitBot() {
 	if (enableLogs) LogThis(colors.magenta, 'Updating google drive.');
 
@@ -208,6 +229,7 @@ exports.UpdateDrive = async function InitBot() {
 
 exports.GoogleDriveTest = async function GoogleDriveTest() {
 	authClient = await authorize();
+	await UpdateSubsTxtFile();
 }
 
 //#region UNUSED METHODS
@@ -220,9 +242,14 @@ async function ListAllFoldersPermissions() {
 
 async function ListFiles() {
 	const drive = google.drive({ version: "v3", auth: authClient });
+	/**
+	 * To learn more about the parameters on files.list:
+	 * https://developers.google.com/drive/api/guides/search-files#node.js = query parameter
+	 */
 	const res = await drive.files.list({
 		pageSize: 10,
 		fields: "nextPageToken, files(id, name)",
+		q: "mimeType = 'application/vnd.google-apps.folder'" // Query only folders
 	});
 	const files = res.data.files;
 	if (files.length === 0) {

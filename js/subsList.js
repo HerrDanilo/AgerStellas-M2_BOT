@@ -10,6 +10,7 @@ const editJsonFile = require('edit-json-file');
 // Paths
 const currentSubsPath = path.resolve('./DONT_GIT/currentSubs.json');
 const csvFilePath = path.resolve('./csv/Base_de_Assinantes.csv');
+const txtFilePath = path.resolve('./DONT_GIT/Apoiadores.txt');
 
 // Json files
 let subsJson = editJsonFile(currentSubsPath, { ignore_dots: false, });
@@ -130,33 +131,35 @@ function GetLastPayment(sub) {
 }
 //#endregion
 
-exports.GetSubInfo = function GetSubInfo(sub, debugShow) {
+function GetSubInfo(sub, debugShow) {
 	/* 
 	.Nome público (.Email perfil Catarse)
 	Assinatura: .Título da recompensa 
 	Status: .Status da Assinatura
 	*/
 
-	var name = subsJson.get(`${sub}.Nome público`);
-	if (name === "") {
-		name = subsJson.get(`${sub}.Nome completo`);
-	}
+	var publicName = subsJson.get(`${sub}.Nome público`);
+	var completeName = subsJson.get(`${sub}.Nome completo`);
+	if (publicName === "") publicName = completeName;
 	var email = subsJson.get(`${sub}.Email perfil Catarse`);
 	var subTier = subsJson.get(`${sub}.Título da recompensa`);
 	var status = subsJson.get(`${sub}.Status da Assinatura`);
-	var catarseId = subsJson.get(`${sub}.ID do usuário`)
+	var catarseId = subsJson.get(`${sub}.ID do usuário`);
+	var isAnonymous = subsJson.get(`${sub}.Anônimo`);
+	if (isAnonymous == "não") isAnonymous = false;
+	else if (isAnonymous == "sim") isAnonymous = true;
 
 	var consoleMsg =
-		`${name} (${email})\n` + `Assinatura: ${subTier}\n` + `Status: ${status}`;
+		`${publicName} (${email})\n` + `Assinatura: ${subTier}\n` + `Status: ${status}`;
 
 	if (debugShow && enableLogs) {
 		console.log("\n" + consoleMsg);
 	}
 
-	return { name, email, subTier, status, catarseId };
+	return { name: publicName, completeName, email, subTier, status, catarseId, isAnonymous };
 }
 
-exports.UpdateSubsList = async function UpdateSubsList() {
+async function UpdateSubsList() {
 	if (enableLogs) LogThis(colors.magenta, "Updating subs list.");
 
 	// Handle CSV
@@ -167,3 +170,23 @@ exports.UpdateSubsList = async function UpdateSubsList() {
 	if (enableLogs) LogThis(colors.cyan, 'Checking for duplicates');
 	CheckForDuplicatesSubs();
 }
+
+async function UpdateSubTxtFile() {
+	let txtContent = [];
+	for (const sub in subsJson.read()) {
+		let subInfo = GetSubInfo(sub);
+		if (subInfo.status != "Ativa") continue;
+		var name = `${subInfo.completeName.toUpperCase()}`;
+		
+		if (subInfo.isAnonymous) name += '_';
+		if (subInfo.subTier == "Braço de Ouro" || subInfo.subTier == "Braço Mágico" ) {
+			name += '*';
+		}
+		txtContent.push(name);
+	}
+	txtContent = txtContent.sort().join('\n');
+	
+	fs.writeFileSync(txtFilePath, txtContent.toString());
+}
+
+module.exports = { GetSubInfo, UpdateSubsList, UpdateSubTxtFile }

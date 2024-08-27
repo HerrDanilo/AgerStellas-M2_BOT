@@ -116,7 +116,7 @@ async function ShareFolder(folder_id, subInfo, folderName) {
 			emailAddress: subInfo.email,
 		},
 		fileId: folder_id,
-		sendNotificationEmail: false, // TODO: Notificar somente na primeira vez que o usuário é adicionado.
+		sendNotificationEmail: true,
 		fields: "*",
 	}).catch((err) => logging.NewError(err.errors));
 
@@ -139,16 +139,6 @@ async function UnshareFolder(folder_id, subInfo, folderName) {
 
 async function BulkChangeSubsAccess() {
 	if (enableLogs) LogThis(colors.magenta, "Bulk changing access.");
-
-	/* TODO: Há um problema pra liberar o acesso pra emails fora da plataforma do google.
-	 * Ou seja, se o email não for @gmail, ou não tiver uma conta do google associada,
-	 * precisaria mandar uma notificação para o usuário.
-	 * 
-	 * ----- MENSAGEM DE ERRO: -----
-	 * Bad Request. User message: "Você está tentando convidar pauloebcamargo@hotmail.com.
-	 * Como não há uma Conta do Google associada a esse endereço de e-mail,
-	 * você precisará selecionar a caixa "Notificar pessoas" para convidar o destinatário."
-	 */
 
 	for (var sub in subsJson.read()) {
 		var subInfo = subsList.GetSubInfo(sub);

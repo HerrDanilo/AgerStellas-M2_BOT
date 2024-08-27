@@ -8,6 +8,7 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
+- [Versão 1.8.1 - 2024-08-27](#versão-181---2024-08-27)
 - [Versão 1.8.0 - 2024-08-27](#versão-180---2024-08-27)
 - [Versão 1.7.1 - 2024-08-23](#versão-171---2024-08-23)
 - [Versão 1.7.0 - 2024-08-19](#versão-170---2024-08-19)
@@ -25,6 +26,11 @@ ___
 
 - [ ] Notificar quando algum erro ocorre. (Utilizar `try` e `catch` para pegar o erro sem crashar o bot, e então notificar o erro.)
 - [ ] Aparentemente houve algum erro ao converter o arquivo `csv` em `json`, mas só ocorreu uma vez e não mais.
+
+# Versão 1.8.1 - 2024-08-27
+**Modificado**
+- Agora o bot notifica por email quando o assinante recebe o acesso as pastas do drive.
+  - Isso resolve o problema de não conseguir compartilhar o acesso a contas que não tem acesso ao google drive normalmente.
 
 # Versão 1.8.0 - 2024-08-27
 **Adicionado**

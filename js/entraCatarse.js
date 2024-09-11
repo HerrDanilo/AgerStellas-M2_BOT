@@ -112,7 +112,7 @@ async function TryToDownloadListFile(page) {
         botao = botoes[0];
         botao?.click();
     });
-    await Delay(20, enableLogs);
+    await Delay(10, enableLogs);
 }
 
 exports.DownloadCooldown = async function DownloadCooldown(browser) {

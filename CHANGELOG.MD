@@ -8,6 +8,7 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
+- [Versão 1.8.2 - 2024-09-11](#versão-182---2024-09-11)
 - [Versão 1.8.1 - 2024-08-27](#versão-181---2024-08-27)
 - [Versão 1.8.0 - 2024-08-27](#versão-180---2024-08-27)
 - [Versão 1.7.1 - 2024-08-23](#versão-171---2024-08-23)
@@ -26,6 +27,13 @@ ___
 
 - [ ] Notificar quando algum erro ocorre. (Utilizar `try` e `catch` para pegar o erro sem crashar o bot, e então notificar o erro.)
 - [ ] Aparentemente houve algum erro ao converter o arquivo `csv` em `json`, mas só ocorreu uma vez e não mais.
+
+# Versão 1.8.2 - 2024-09-11
+**Modificado**
+- Alguns delays foram modificados:
+  - O tempo de espera entre cada rodagem do bot: ***300s (5 mins) -> 900s (15 mins)***
+  - Cada tentativa de download do arquivo `csv`: ***20s -> 10s***;
+  - Delay de remover o antigo `csv`, e renomear o novo: ***5s -> 2.5s***;
 
 # Versão 1.8.1 - 2024-08-27
 **Modificado**

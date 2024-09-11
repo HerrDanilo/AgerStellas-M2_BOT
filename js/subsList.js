@@ -32,7 +32,7 @@ async function RemoveAndRenameCSVFile() {
 	var csvToRemove = path.resolve(`${csvDownloadPath}/Base_de_Assinantes.csv`);
 	if (fs.existsSync(csvToRemove)) fs.unlinkSync(csvToRemove);
 
-	await Delay(5, enableLogs);
+	await Delay(2.5, enableLogs);
 
 	if (enableLogs) LogThis(colors.magenta, 'Renaming newer CSV file.');
 	var fileToRename = fs.readdirSync(csvDownloadPath)[0];

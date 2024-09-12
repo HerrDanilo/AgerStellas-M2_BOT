@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require("path");
 const csv = require("csvtojson");
+const logging = require('./logging.js');
 const { Delay, LogThis, colors } = require('aranha-commons');
 const editJsonFile = require('edit-json-file');
 //#endregion
@@ -23,50 +24,54 @@ var enableLogs = configsJson.get('enableLogs');
 
 //#region CSV => JSON
 async function CSVToJson() {
-	await RemoveAndRenameCSVFile();
+	await RemoveOldCSV();
+	await Delay(2.5, enableLogs);
+	RenameCSV();
+
 	await TransformCsvIntoJson();
 }
 
-async function RemoveAndRenameCSVFile() {
-	if (enableLogs) LogThis(colors.magenta, 'Removing older CSV file.');
-	var csvToRemove = path.resolve(`${csvDownloadPath}/Base_de_Assinantes.csv`);
-	if (fs.existsSync(csvToRemove)) fs.unlinkSync(csvToRemove);
+function RenameCSV() {
+	if (!fs.existsSync(`${csvDownloadPath}/Base_de_Assinantes.csv`)) {
+		if (enableLogs) LogThis(colors.magenta, 'Renaming newer CSV file.');
+		var fileToRename = fs.readdirSync(csvDownloadPath)[0];
+		fs.rename(`${csvDownloadPath}/${fileToRename}`, `${csvDownloadPath}/Base_de_Assinantes.csv`, function (err) {
+			if (err) logging.NewError(err);
+		});
+	}
+}
 
-	await Delay(2.5, enableLogs);
-
-	if (enableLogs) LogThis(colors.magenta, 'Renaming newer CSV file.');
-	var fileToRename = fs.readdirSync(csvDownloadPath)[0];
-	fs.rename(`${csvDownloadPath}/${fileToRename}`, `${csvDownloadPath}/Base_de_Assinantes.csv`, function (err) {
-		if (err) LogThis(colors.red, 'ERROR: ' + err);
-	});
+async function RemoveOldCSV() {
+	var csvFolder = fs.readdirSync(csvDownloadPath);
+	if (csvFolder.length > 1) {
+		if (enableLogs) LogThis(colors.magenta, 'Removing older CSV file.');
+		var csvToRemove = path.resolve(`${csvDownloadPath}/Base_de_Assinantes.csv`);
+		if (fs.existsSync(csvToRemove)) fs.unlinkSync(csvToRemove);
+	}
 }
 
 async function TransformCsvIntoJson() {
 	if (enableLogs) LogThis(colors.magenta, 'Transforming Csv file to Json.');
-	/* FIXME: Houve um erro logo após esse `LogThis`.
-	 * Message: "File does not exist. Check to make sure the file path to your csv is correct."
-	 */
+	
 	let index = 0;
 
 	subsJson.empty();
 
-	await csv(
-		{
-			flatKeys: true,
-		},
-		{
-			objectMode: true,
-		}
-	)
-		.fromFile(csvFilePath)
-		.on("data", (data) => {
-			subsJson.set(`Assinante${index++}`, data);
-			subsJson.save();
-			subsJson = editJsonFile(currentSubsPath, {
-				ignore_dots: false,
-				autosave: true,
+	try {
+		await csv(
+			{ flatKeys: true, },
+			{ objectMode: true, }
+		)
+			.fromFile(csvFilePath)
+			.on("data", (data) => {
+				subsJson.set(`Assinante${index++}`, data);
+				subsJson.save();
+				subsJson = editJsonFile(currentSubsPath, {
+					ignore_dots: false,
+					autosave: true,
+				});
 			});
-		});
+	} catch (error) { logging.NewError(error); }
 }
 //#endregion
 
@@ -177,15 +182,15 @@ async function UpdateSubTxtFile() {
 		let subInfo = GetSubInfo(sub);
 		if (subInfo.status != "Ativa") continue;
 		var name = `${subInfo.completeName.toUpperCase()}`;
-		
+
 		if (subInfo.isAnonymous) name += '_';
-		if (subInfo.subTier == "Braço de Ouro" || subInfo.subTier == "Braço Mágico" ) {
+		if (subInfo.subTier == "Braço de Ouro" || subInfo.subTier == "Braço Mágico") {
 			name += '*';
 		}
 		txtContent.push(name);
 	}
 	txtContent = txtContent.sort().join('\n');
-	
+
 	fs.writeFileSync(txtFilePath, txtContent.toString());
 }
 

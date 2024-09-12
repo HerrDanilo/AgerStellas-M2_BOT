@@ -8,6 +8,7 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
+- [Versão 1.8.3 - 2024-09-12](#versão-183---2024-09-12)
 - [Versão 1.8.2 - 2024-09-11](#versão-182---2024-09-11)
 - [Versão 1.8.1 - 2024-08-27](#versão-181---2024-08-27)
 - [Versão 1.8.0 - 2024-08-27](#versão-180---2024-08-27)
@@ -26,7 +27,20 @@ ___
 # Futuras versões
 
 - [ ] Notificar quando algum erro ocorre. (Utilizar `try` e `catch` para pegar o erro sem crashar o bot, e então notificar o erro.)
-- [ ] Aparentemente houve algum erro ao converter o arquivo `csv` em `json`, mas só ocorreu uma vez e não mais.
+- [x] [googleDrive.js](./js/googleDrive.js):
+  - `loadSavedCredentialsIfExist()` agora registra o erro no log ao invés de só enviar uma mensagem vaga no console.
+
+# Versão 1.8.3 - 2024-09-12
+**Adicionado**
+- Criado um arquivo `AgerStellas.bat` para fazer o bot rodar localmente.
+
+**Modificado**
+- [subsList.js](./js/subsList.js):
+  - `RemoveAndRenameCSVFile()` foi dividido em dois métodos (`RemoveOldCSV()` & `RenameCSV()`).
+  - `RemoveOldCSV()` adicionada verificação para não ficar sem arquivos na pasta.
+  - `RenameCSV()` não vai renomear um arquivo que já foi renomeado.
+  - `TransformCsvIntoJson()` Adicionado try catch para resolver o erro de não conseguir transformar o csv em json.
+    - *Talvez adicionar uma verificação de só rodar o código caso o arquivo csv exista.*
 
 # Versão 1.8.2 - 2024-09-11
 **Modificado**

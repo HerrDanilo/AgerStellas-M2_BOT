@@ -13,6 +13,7 @@ var enableLogs = configsJson.get('enableLogs');
 //#endregion
 
 async function InitBot() {
+    // TODO: Antes do programa iniciar, verificar se as pastas estão todas presentes!
     if (enableLogs) LogThis(colors.green, "Program is starting! - " + new Date());
 
     logging.GetCurrentLogFile();

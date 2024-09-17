@@ -27,6 +27,10 @@ ___
 # Futuras versões
 
 - [ ] Notificar quando algum erro ocorre. (Utilizar `try` e `catch` para pegar o erro sem crashar o bot, e então notificar o erro.)
+- [ ] Ao iniciar o programa, deve-se fazer uma rápida verificação se as pastas principais existem, caso contrário, crie-as.
+  - [ ] `csv`
+  - [ ] `DONT_GIT`
+  - [ ] `logs`
 - [x] [googleDrive.js](./js/googleDrive.js):
   - `loadSavedCredentialsIfExist()` agora registra o erro no log ao invés de só enviar uma mensagem vaga no console.
 

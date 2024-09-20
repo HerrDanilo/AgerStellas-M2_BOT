@@ -8,6 +8,7 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
+- [Versão 1.8.4 - 2024-09-20](#versão-184---2024-09-20)
 - [Versão 1.8.3 - 2024-09-12](#versão-183---2024-09-12)
 - [Versão 1.8.2 - 2024-09-11](#versão-182---2024-09-11)
 - [Versão 1.8.1 - 2024-08-27](#versão-181---2024-08-27)
@@ -29,12 +30,14 @@ ___
 - [ ] Notificar quando algum erro ocorre:
   - [x] Utilizar `try` e `catch` para pegar o erro sem crashar o bot.
   - [ ] Notificar o erro. (Discord no futuro, mas no momento pode ser um aviso por email talvez.)
-- [ ] Ao iniciar o programa, deve-se fazer uma rápida verificação se as pastas principais existem, caso contrário, crie-as.
-  - [ ] `csv`
-  - [ ] `DONT_GIT`
-  - [ ] `logs`
 - [x] [googleDrive.js](./js/googleDrive.js):
   - `loadSavedCredentialsIfExist()` agora registra o erro no log ao invés de só enviar uma mensagem vaga no console.
+
+# Versão 1.8.4 - 2024-09-20
+**Adicionado**
+- Quando o programa inicia, há uma verificação de quais pastas existem. Essa verificação é feita no novo script [`programCheck.js`](./js/programCheck.js).
+  - Caso uma pasta essencial não exista, como a `DONT_GIT`, o programa fecha até a pasta ser criada manualmente.
+  - Já caso outra pasta qualquer não exista, o programa cria a pasta antes de continuar. 
 
 # Versão 1.8.3 - 2024-09-12
 **Adicionado**

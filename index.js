@@ -1,6 +1,7 @@
 //#region IMPORTS
 const editJsonFile = require("edit-json-file");
 const entraCatarse = require("./js/entraCatarse.js");
+const programCheck = require("./js/programCheck.js");
 const googleDrive = require("./js/googleDrive.js");
 const subsList = require("./js/subsList.js");
 const logging = require("./js/logging.js");
@@ -13,7 +14,10 @@ var enableLogs = configsJson.get("enableLogs");
 //#endregion
 
 async function InitBot() {
-    // TODO: Antes do programa iniciar, verificar se as pastas estão todas presentes!
+    if (!programCheck.VerifyFolders()) {
+        logging.FinishCurrentRuntime(400);
+        process.exit(400);
+    }
     if (enableLogs) LogThis(colors.green, "Program is starting! - " + new Date());
 
     logging.GetCurrentLogFile();

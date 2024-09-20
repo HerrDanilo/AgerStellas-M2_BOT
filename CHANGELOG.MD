@@ -26,7 +26,9 @@ e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/
 ___
 # Futuras versões
 
-- [ ] Notificar quando algum erro ocorre. (Utilizar `try` e `catch` para pegar o erro sem crashar o bot, e então notificar o erro.)
+- [ ] Notificar quando algum erro ocorre:
+  - [x] Utilizar `try` e `catch` para pegar o erro sem crashar o bot.
+  - [ ] Notificar o erro. (Discord no futuro, mas no momento pode ser um aviso por email talvez.)
 - [ ] Ao iniciar o programa, deve-se fazer uma rápida verificação se as pastas principais existem, caso contrário, crie-as.
   - [ ] `csv`
   - [ ] `DONT_GIT`

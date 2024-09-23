@@ -35,8 +35,8 @@ function RenameCSV() {
 	if (!fs.existsSync(`${csvDownloadPath}/Base_de_Assinantes.csv`)) {
 		if (enableLogs) LogThis(colors.magenta, 'Renaming newer CSV file.');
 		var fileToRename = fs.readdirSync(csvDownloadPath)[0];
-		fs.rename(`${csvDownloadPath}/${fileToRename}`, `${csvDownloadPath}/Base_de_Assinantes.csv`, function (err) {
-			if (err) logging.NewError(err);
+		fs.rename(`${csvDownloadPath}/${fileToRename}`, `${csvDownloadPath}/Base_de_Assinantes.csv`, function (error) {
+			if (error) logging.NewError("subsList.js > RenameCSV()", error);
 		});
 	}
 }
@@ -71,7 +71,7 @@ async function TransformCsvIntoJson() {
 					autosave: true,
 				});
 			});
-	} catch (error) { logging.NewError(error); }
+	} catch (error) { logging.NewError("subsList.js > TransformCsvIntoJson()", error); }
 }
 //#endregion
 

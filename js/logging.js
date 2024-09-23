@@ -25,7 +25,8 @@ const runtimeKeys = {
 };
 const errorKeys = {
 	time: "time",
-	message: "message"
+	message: "message",
+	where: "where"
 }
 
 function GetTime() {
@@ -110,13 +111,14 @@ function FinishCurrentRuntime(execCode) {
 }
 //#endregion
 
-function NewError(error) {
+function NewError(where, error) {
 	var value_errorAmount = loggingJson.get(key_errorAmount);
 	var currentRuntime = GetCurrentRuntime();
 	var currentError = `${currentRuntime.key}.errors.error${value_errorAmount}`;
 
 	loggingJson.set(`${currentError}.${errorKeys.time}`, GetTime());
-	loggingJson.set(`${currentError}.${errorKeys.message}`, error ? error : "no error specified");
+	loggingJson.set(`${currentError}.${errorKeys.where}`, where ? where : "no path passed.");
+	loggingJson.set(`${currentError}.${errorKeys.message}`, error ? error : "no error specified.");
 	loggingJson.set(key_errorAmount, ++value_errorAmount);
 	loggingJson.save();
 }

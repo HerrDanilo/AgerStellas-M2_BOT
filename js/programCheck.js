@@ -13,7 +13,7 @@ function VerifyFolders() {
         if (!exist) {
             switch (folder) {
                 case "DONT_GIT":
-                    logging.NewError("Folder `DONT_GIT` doesn't exist.");
+                    logging.NewError("programCheck.js > VerifyFolders()", "Folder `DONT_GIT` doesn't exist.");
                     canContinue = false;
                     break;
                 default:

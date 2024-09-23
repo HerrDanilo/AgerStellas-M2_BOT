@@ -93,7 +93,7 @@ async function DownloadSubsList(page) {
         await TryToDownloadListFile(page);
         csvFolder = fs.readdirSync(csvDownloadPath); // Read the folder contents again.
         if (downloadAttempts >= 5) {
-            logging.NewError("Reached max attempts to download .csv file.");
+            logging.NewError("entraCatarse.js > DownloadSubsList()", "Reached max attempts to download .csv file.");
             break;
         }
     }
@@ -123,7 +123,7 @@ exports.DownloadCooldown = async function DownloadCooldown(browser) {
         await DownloadSubsList(page);
     }
     else {
-        logging.NewError(`Algo deu errado ao sair do cooldown.\nlink: ${page.url()}`);
+        logging.NewError("entraCatarse.js > DownloadCooldown()", `Algo deu errado ao sair do cooldown.\nlink: ${page.url()}`);
     }
 }
 
@@ -140,7 +140,7 @@ async function SomethingWentWrong(browser, page) {
     var screenshotName = "Error_" + new Date();
     var screenshotPath = path.resolve('../screenshots');
     LogThis(colors.red, "Algo deu errado aqui ó!");
-    logging.NewError(`Houve um erro ao logar no catarse, verifique a print para mais informações.\n ${screenshotName}`);
+    logging.NewError("entraCatarse.js > SomethingWentWrong()", `Houve um erro ao logar no catarse, verifique a print para mais informações.\n ${screenshotName}`);
     await page.screenshot({ path: `${screenshotPath}/${screenshotName}` });
     browser.close();
 }

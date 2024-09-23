@@ -8,6 +8,7 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
+- [Versão 1.8.5 - 2024-09-23](#versão-185---2024-09-23)
 - [Versão 1.8.4 - 2024-09-20](#versão-184---2024-09-20)
 - [Versão 1.8.3 - 2024-09-12](#versão-183---2024-09-12)
 - [Versão 1.8.2 - 2024-09-11](#versão-182---2024-09-11)
@@ -32,6 +33,11 @@ ___
   - [ ] Notificar o erro. (Discord no futuro, mas no momento pode ser um aviso por email talvez.)
 - [x] [googleDrive.js](./js/googleDrive.js):
   - `loadSavedCredentialsIfExist()` agora registra o erro no log ao invés de só enviar uma mensagem vaga no console.
+
+# Versão 1.8.5 - 2024-09-23
+**Modificado**
+- O método `NewError()` no `logging.js` agora aceita o caminho de onde o erro aconteceu.
+  - Por conta disso, onde o método era chamado, foi alterado para adicionar o caminho ao registro do erro.
 
 # Versão 1.8.4 - 2024-09-20
 **Adicionado**

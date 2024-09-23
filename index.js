@@ -26,7 +26,7 @@ async function InitBot() {
 
     try {
         var catarse = await entraCatarse.StartCatarse();
-    } catch (error) { logging.NewError(error); }
+    } catch (error) { logging.NewError("index.js > InitBot() > StartCatarse()", error); }
 
     if (enableLogs) LogThis(colors.cyan, "Done with catarse.");
 
@@ -37,12 +37,12 @@ async function InitBot() {
 async function RepeatBot() {
     try {
         await subsList.UpdateSubsList();
-    } catch (error) { logging.NewError(error); }
+    } catch (error) { logging.NewError("index.js > RepeatBot() > UpdateSubsList()", error); }
     if (enableLogs) LogThis(colors.cyan, "Finished updating the subs list.");
 
     try {
         await googleDrive.UpdateDrive();
-    } catch (error) { logging.NewError(error); }
+    } catch (error) { logging.NewError("index.js > RepeatBot() > UpdateDrive()", error); }
     if (enableLogs) LogThis(colors.cyan, "Done with google drive.");
 }
 
@@ -57,7 +57,7 @@ async function ProgramCooldown(catarse) {
 
     try {
         await entraCatarse.DownloadCooldown(catarse.browser);
-    } catch (error) { logging.NewError(error); }
+    } catch (error) { logging.NewError("index.js > ProgramCooldown() > DownloadCooldown()", error); }
     await RepeatBot();
 
     ProgramCooldown(catarse);

@@ -118,7 +118,7 @@ async function ShareFolder(folder_id, subInfo, folderName) {
 		fileId: folder_id,
 		sendNotificationEmail: true,
 		fields: "*",
-	}).catch((err) => logging.NewError(err.errors));
+	}).catch((err) => logging.NewError("googleDrive.js > ShareFolder()", err.errors));
 
 	if (res) {
 		if (enableLogs) LogThis(colors.green, `${subInfo.email} now has access to ${folderName} (${folder_id})`);
@@ -130,7 +130,7 @@ async function UnshareFolder(folder_id, subInfo, folderName) {
 	const res = await drive.permissions.delete({
 		fileId: folder_id,
 		permissionId: await GetPermissionIdFromEmail(subInfo.email),
-	}).catch((err) => logging.NewError(err.errors));
+	}).catch((err) => logging.NewError("googleDrive.js > UnshareFolder()", err.errors));
 
 	if (res) {
 		if (enableLogs) LogThis(colors.red, `Succesfully removed ${subInfo.email}'s access to ${folderName} (${folder_id})`);
@@ -200,7 +200,7 @@ async function UpdateSubsTxtFile() {
 			mimeType: "text/plain",
 			body: (await fs.readFile(filePath)).toString(),
 		}
-	}).catch((err) => logging.NewError(err.errors));
+	}).catch((err) => logging.NewError("googleDrive.js > UpdateSubsTxtFile()", err.errors));
 
 	if (res) {
 		if (enableLogs) LogThis(colors.green, "Success");

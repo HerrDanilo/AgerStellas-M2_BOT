@@ -35,7 +35,7 @@ async function loadSavedCredentialsIfExist() {
 		const credentials = JSON.parse(content);
 		return google.auth.fromJSON(credentials);
 	} catch (err) {
-		console.log("deu erro ao carregar as credenciais existentes.");
+		logging.NewError("googleDrive.js > loadSavedCredentialsIfExist()", "Não foi possível carregar as credenciais existentes");
 		return null;
 	}
 }

@@ -8,6 +8,7 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
+- [Versão 1.8.6 - 2024-10-02](#versão-186---2024-10-02)
 - [Versão 1.8.5 - 2024-09-23](#versão-185---2024-09-23)
 - [Versão 1.8.4 - 2024-09-20](#versão-184---2024-09-20)
 - [Versão 1.8.3 - 2024-09-12](#versão-183---2024-09-12)
@@ -31,12 +32,15 @@ ___
 - [ ] Notificar quando algum erro ocorre:
   - [x] Utilizar `try` e `catch` para pegar o erro sem crashar o bot.
   - [ ] Notificar o erro. (Discord no futuro, mas no momento pode ser um aviso por email talvez.)
-- [x] [googleDrive.js](./js/googleDrive.js):
+
+# Versão 1.8.6 - 2024-10-02
+**Corrigido**
+- [googleDrive.js](./js/googleDrive.js):
   - `loadSavedCredentialsIfExist()` agora registra o erro no log ao invés de só enviar uma mensagem vaga no console.
-- [x] [programCheck.js](./js/programCheck.js):
+- [programCheck.js](./js/programCheck.js):
   - Removido um `console.log` de teste que mostrava quais pastas existem no projeto.
-- [x] [logging.js](./js/logging.js):
-  - Resolvido um erro onde o bot não atualizava o dia correto nos logs, mesmo quando virava o dia.
+- [logging.js](./js/logging.js):
+  - Resolvido um erro onde o programa não atualizava o dia correto nos logs, mesmo quando virava o dia.
 
 # Versão 1.8.5 - 2024-09-23
 **Modificado**

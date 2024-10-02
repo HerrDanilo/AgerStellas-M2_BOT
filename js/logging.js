@@ -11,6 +11,7 @@ const path_logsFolder = path.resolve("./logs");
 var appNameVersion = `${packageJson.get("name")}-${packageJson.get("version")}`;
 
 let key_today;
+UpdateKeyToday();
 var key_runtimeAmount = `${key_today}.runtimeAmount`;
 var key_errorAmount = `${key_today}.errorAmount`;
 
@@ -29,7 +30,19 @@ const errorKeys = {
 	where: "where"
 }
 
-function UpdateKeyToday() { key_today = `day${new Date().getDate()}`; }
+function UpdateKeyToday() {
+	var todayDate = new Date().getDate();
+	if (!key_today) {
+		key_today = `day${todayDate}`;
+	}
+	else {
+		var keyDate = key_today.slice(3);
+		
+		if (keyDate != todayDate) {
+			key_today = `day${todayDate}`;
+		}
+	}
+}
 
 function GetTime() {
 	const date = new Date();

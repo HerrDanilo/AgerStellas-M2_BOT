@@ -35,6 +35,8 @@ ___
   - `loadSavedCredentialsIfExist()` agora registra o erro no log ao invés de só enviar uma mensagem vaga no console.
 - [x] [programCheck.js](./js/programCheck.js):
   - Removido um `console.log` de teste que mostrava quais pastas existem no projeto.
+- [x] [logging.js](./js/logging.js):
+  - Resolvido um erro onde o bot não atualizava o dia correto nos logs, mesmo quando virava o dia.
 
 # Versão 1.8.5 - 2024-09-23
 **Modificado**

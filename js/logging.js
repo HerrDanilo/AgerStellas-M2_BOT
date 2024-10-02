@@ -10,7 +10,7 @@ const packageJson = editJsonFile(path.resolve("./package.json"));
 const path_logsFolder = path.resolve("./logs");
 var appNameVersion = `${packageJson.get("name")}-${packageJson.get("version")}`;
 
-var key_today = `day${new Date().getDate()}`;
+let key_today;
 var key_runtimeAmount = `${key_today}.runtimeAmount`;
 var key_errorAmount = `${key_today}.errorAmount`;
 
@@ -28,6 +28,8 @@ const errorKeys = {
 	message: "message",
 	where: "where"
 }
+
+function UpdateKeyToday() { key_today = `day${new Date().getDate()}`; }
 
 function GetTime() {
 	const date = new Date();
@@ -52,11 +54,11 @@ function ResetLogFile() {
 
 function CreateLogFile(jsonName) {
 	LogThis(colors.green, `Creating log file for ${appNameVersion}`);
-	
+
 	if (!fs.existsSync(path_logsFolder)) {
 		fs.mkdirSync(path_logsFolder);
 	}
-	
+
 	loggingJson = editJsonFile(`${path_logsFolder}/${jsonName}`);
 	ResetLogFile();
 }
@@ -86,6 +88,7 @@ function UpdateCurrentRuntime(jsonKey, value) {
 
 //#region RUNTIMES
 function GetCurrentRuntime() {
+	UpdateKeyToday();	
 	if (!loggingJson.get(`${key_today}`)) ResetLogFile();
 	var value = loggingJson.get(key_runtimeAmount);
 	var key = `${key_today}.runtime${value}`;

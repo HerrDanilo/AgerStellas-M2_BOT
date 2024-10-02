@@ -33,6 +33,8 @@ ___
   - [ ] Notificar o erro. (Discord no futuro, mas no momento pode ser um aviso por email talvez.)
 - [x] [googleDrive.js](./js/googleDrive.js):
   - `loadSavedCredentialsIfExist()` agora registra o erro no log ao invés de só enviar uma mensagem vaga no console.
+- [x] [programCheck.js](./js/programCheck.js):
+  - Removido um `console.log` de teste que mostrava quais pastas existem no projeto.
 
 # Versão 1.8.5 - 2024-09-23
 **Modificado**

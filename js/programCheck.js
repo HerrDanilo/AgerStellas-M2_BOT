@@ -9,7 +9,6 @@ function VerifyFolders() {
     var canContinue = true;
     folders.forEach(folder => {
         const exist = fs.existsSync(path.resolve(folder));
-        console.log(`${folder}: ${exist}`);
         if (!exist) {
             switch (folder) {
                 case "DONT_GIT":

@@ -32,6 +32,8 @@ ___
 - [ ] Notificar quando algum erro ocorre:
   - [x] Utilizar `try` e `catch` para pegar o erro sem crashar o bot.
   - [ ] Notificar o erro. (Discord no futuro, mas no momento pode ser um aviso por email talvez.)
+- [ ] `runtimeAmount` fica nulo quando vira o dia, impedindo de criar registros verdadeiros.
+  - [ ] Ficam como `runtimeundefined` ou `runtimeNaN`.
 
 # Versão 1.8.6 - 2024-10-02
 **Corrigido**

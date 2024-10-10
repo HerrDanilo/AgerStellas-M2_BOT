@@ -8,6 +8,7 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
+- [Versão 1.8.7 - 2024-10-10](#versão-187---2024-10-10)
 - [Versão 1.8.6 - 2024-10-02](#versão-186---2024-10-02)
 - [Versão 1.8.5 - 2024-09-23](#versão-185---2024-09-23)
 - [Versão 1.8.4 - 2024-09-20](#versão-184---2024-09-20)
@@ -32,8 +33,12 @@ ___
 - [ ] Notificar quando algum erro ocorre:
   - [x] Utilizar `try` e `catch` para pegar o erro sem crashar o bot.
   - [ ] Notificar o erro. (Discord no futuro, mas no momento pode ser um aviso por email talvez.)
-- [ ] `runtimeAmount` fica nulo quando vira o dia, impedindo de criar registros verdadeiros.
-  - [ ] Ficam como `runtimeundefined` ou `runtimeNaN`.
+
+# Versão 1.8.7 - 2024-10-10
+**Corrigido**
+- [logging.js](./js/logging.js):
+  - `runtimeAmount` ficava nulo ao virar o dia, impedindo de criar registros verdadeiros.
+    - Os registros ficavam como `runtimeundefined` ou `runtimeNaN`.
 
 # Versão 1.8.6 - 2024-10-02
 **Corrigido**

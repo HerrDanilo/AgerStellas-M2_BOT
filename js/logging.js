@@ -9,11 +9,13 @@ const { LogThis, colors, Delay, RandomInt } = require("aranha-commons");
 const packageJson = editJsonFile(path.resolve("./package.json"));
 const path_logsFolder = path.resolve("./logs");
 var appNameVersion = `${packageJson.get("name")}-${packageJson.get("version")}`;
+var configsJson = editJsonFile(path.resolve('./DONT_GIT/configs.json'));
+var enableLogs = configsJson.get('enableLogs');
 
 let key_today;
-UpdateKeyToday();
-var key_runtimeAmount = `${key_today}.runtimeAmount`;
-var key_errorAmount = `${key_today}.errorAmount`;
+var key_runtimeAmount;
+var key_errorAmount;
+UpdateKeyToday(true);
 
 let loggingJson = editJsonFile();
 //#endregion
@@ -30,17 +32,18 @@ const errorKeys = {
 	where: "where"
 }
 
-function UpdateKeyToday() {
-	var todayDate = new Date().getDate();
-	if (!key_today) {
+/**
+ * @param {boolean} forceUpdate Whether to force update.
+ */
+function UpdateKeyToday(forceUpdate) {
+	var today = new Date();
+	var todayDate = today.getDate();
+
+	if (forceUpdate || today.getHours() == 0 && today.getMinutes() < 20) {
+		if (enableLogs) LogThis(colors.green, "Updating key_today for logging.");
 		key_today = `day${todayDate}`;
-	}
-	else {
-		var keyDate = key_today.slice(3);
-		
-		if (keyDate != todayDate) {
-			key_today = `day${todayDate}`;
-		}
+		key_runtimeAmount = `${key_today}.runtimeAmount`;
+		key_errorAmount = `${key_today}.errorAmount`;
 	}
 }
 
@@ -101,8 +104,8 @@ function UpdateCurrentRuntime(jsonKey, value) {
 
 //#region RUNTIMES
 function GetCurrentRuntime() {
-	UpdateKeyToday();	
-	if (!loggingJson.get(`${key_today}`)) ResetLogFile();
+	UpdateKeyToday();
+	if (!loggingJson.get(`${key_runtimeAmount}`)) ResetLogFile();
 	var value = loggingJson.get(key_runtimeAmount);
 	var key = `${key_today}.runtime${value}`;
 	return { key, value };

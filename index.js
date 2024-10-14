@@ -24,7 +24,7 @@ async function InitBot() {
 
     SaveLastRuntime();
 
-    try {
+    try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
         var catarse = await entraCatarse.StartCatarse();
     } catch (error) { logging.NewError("index.js > InitBot() > StartCatarse()", error); }
 
@@ -35,12 +35,12 @@ async function InitBot() {
 }
 
 async function RepeatBot() {
-    try {
+    try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
         await subsList.UpdateSubsList();
     } catch (error) { logging.NewError("index.js > RepeatBot() > UpdateSubsList()", error); }
     if (enableLogs) LogThis(colors.cyan, "Finished updating the subs list.");
 
-    try {
+    try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
         await googleDrive.UpdateDrive();
     } catch (error) { logging.NewError("index.js > RepeatBot() > UpdateDrive()", error); }
     if (enableLogs) LogThis(colors.cyan, "Done with google drive.");
@@ -55,7 +55,7 @@ async function ProgramCooldown(catarse) {
     if (enableLogs) LogThis(colors.cyan, "Waking up...");
     SaveLastRuntime();
 
-    try {
+    try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
         await entraCatarse.DownloadCooldown(catarse.browser);
     } catch (error) { logging.NewError("index.js > ProgramCooldown() > DownloadCooldown()", error); }
     await RepeatBot();

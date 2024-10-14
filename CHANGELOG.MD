@@ -31,6 +31,7 @@ ___
 # Futuras versões
 
 - [ ] Notificar quando algum erro ocorre:
+  - [ ] Os `try&catch` no [index.js](./index.js) não costuma retornar um erro de verdade, só o caminho mas sem uma mensagem, nem título do erro.
   - [x] Utilizar `try` e `catch` para pegar o erro sem crashar o bot.
   - [ ] Notificar o erro. (Discord no futuro, mas no momento pode ser um aviso por email talvez.)
 

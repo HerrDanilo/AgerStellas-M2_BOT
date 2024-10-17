@@ -34,6 +34,7 @@ ___
   - [ ] Os `try&catch` no [index.js](./index.js) não costuma retornar um erro de verdade, só o caminho mas sem uma mensagem, nem título do erro.
   - [x] Utilizar `try` e `catch` para pegar o erro sem crashar o bot.
   - [ ] Notificar o erro. (Discord no futuro, mas no momento pode ser um aviso por email talvez.)
+- [x] Alguns emails apesar de receberem o convite, não aceitam ou não têm o acesso ao drive, enchendo o console de mensagens repetidas.
 
 # Versão 1.8.7 - 2024-10-10
 **Corrigido**

@@ -140,8 +140,14 @@ async function UnshareFolder(folder_id, subInfo, folderName) {
 async function BulkChangeSubsAccess() {
 	if (enableLogs) LogThis(colors.magenta, "Bulk changing access.");
 
+	let emailsToIgnore = [];
+	for (let i = 0; i < configsJson.get("emailsToIgnore.count"); i++) {
+		emailsToIgnore.push(configsJson.get(`emailsToIgnore.${i}`));
+	}
 	for (var sub in subsJson.read()) {
 		var subInfo = subsList.GetSubInfo(sub);
+		
+		if (emailsToIgnore.includes(subInfo.email)) continue;
 
 		await RemoveAccessFromAllFolders(subInfo, subInfo.status == "Ativa");
 

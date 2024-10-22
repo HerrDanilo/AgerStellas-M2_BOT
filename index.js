@@ -24,6 +24,9 @@ async function InitBot() {
 
     SaveLastRuntime();
 
+    // FIXME: Quando o `StartCatarse()` dá erro, o bot deveria parar e tentar novamente.
+    // Atualmente o bot está dando `TimeoutError` com frequência, impedindo do bot conectar ao catarse.
+    
     try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
         var catarse = await entraCatarse.StartCatarse();
     } catch (error) { logging.NewError("index.js > InitBot() > StartCatarse()", error); }

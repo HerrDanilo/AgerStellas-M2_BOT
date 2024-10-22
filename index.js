@@ -29,9 +29,11 @@ async function InitBot() {
     
     try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
         var catarse = await entraCatarse.StartCatarse();
-    } catch (error) { logging.NewError("index.js > InitBot() > StartCatarse()", error); }
-
-    if (enableLogs) LogThis(colors.cyan, "Done with catarse.");
+        if (enableLogs) LogThis(colors.cyan, "Done with catarse.");
+    } catch (error) {
+        logging.NewError("index.js > InitBot() > StartCatarse()", error);
+        console.log(error); // TODO: Assim é possível ver o erro, mas apenas no console.
+    }
 
     await RepeatBot();
     await ProgramCooldown(catarse);
@@ -40,13 +42,19 @@ async function InitBot() {
 async function RepeatBot() {
     try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
         await subsList.UpdateSubsList();
-    } catch (error) { logging.NewError("index.js > RepeatBot() > UpdateSubsList()", error); }
-    if (enableLogs) LogThis(colors.cyan, "Finished updating the subs list.");
+        if (enableLogs) LogThis(colors.cyan, "Finished updating the subs list.");
+    } catch (error) {
+        logging.NewError("index.js > RepeatBot() > UpdateSubsList()", error);
+        console.log(error); // TODO: Assim é possível ver o erro, mas apenas no console.
+    }
 
     try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
         await googleDrive.UpdateDrive();
-    } catch (error) { logging.NewError("index.js > RepeatBot() > UpdateDrive()", error); }
-    if (enableLogs) LogThis(colors.cyan, "Done with google drive.");
+        if (enableLogs) LogThis(colors.cyan, "Done with google drive.");
+    } catch (error) {
+        logging.NewError("index.js > RepeatBot() > UpdateDrive()", error);
+        console.log(error); // TODO: Assim é possível ver o erro, mas apenas no console.
+    }
 }
 
 async function ProgramCooldown(catarse) {

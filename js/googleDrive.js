@@ -144,14 +144,21 @@ async function BulkChangeSubsAccess() {
 	for (let i = 0; i < configsJson.get("emailsToIgnore.count"); i++) {
 		emailsToIgnore.push(configsJson.get(`emailsToIgnore.${i}`));
 	}
+	let overwatchList = [];
+	for (let i = 0; i < configsJson.get("overwatchList.count"); i++) {
+		overwatchList.push(configsJson.get(`overwatchList.${i}`));
+	}
 	for (var sub in subsJson.read()) {
 		var subInfo = subsList.GetSubInfo(sub);
 		
+		if (overwatchList.includes(subInfo.email)) LogThis(colors.yellow, `${subInfo.email} has status of: ${subInfo.status}`);
 		if (emailsToIgnore.includes(subInfo.email)) continue;
 
-		await RemoveAccessFromAllFolders(subInfo, subInfo.status == "Ativa");
+		let hasActiveStatus = subInfo.status == "Ativa" || subInfo.status == "Cancelamento solicitado";
 
-		if (subInfo.status == "Ativa") await GiveAccessToFolders(subInfo);
+		await RemoveAccessFromAllFolders(subInfo, hasActiveStatus);
+
+		if (hasActiveStatus) await GiveAccessToFolders(subInfo);
 	}
 	await UpdateSubsTxtFile();
 }

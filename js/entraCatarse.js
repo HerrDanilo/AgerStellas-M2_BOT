@@ -4,13 +4,13 @@ const path = require("path");
 const puppeteer = require("puppeteer");
 const logging = require('./logging.js');
 const editJsonFile = require('edit-json-file');
+const sendMessage = require('./sendMessageCatarse.js');
 const { Delay, LogThis, colors } = require("aranha-commons");
 //#endregion
 
 //#region GLOBAL VARIABLES
 const csvDownloadPath = path.resolve("./csv");
 let configsJson = editJsonFile(path.resolve('./DONT_GIT/configs.json'));
-var isHeadless = configsJson.get('puppeteer.headless');
 var enableLogs = configsJson.get('enableLogs');
 //#endregion
 
@@ -152,7 +152,7 @@ async function StopProgram() {
     process.exit(1);
 }
 
-exports.StartCatarse = async function StartProgram() {
+exports.StartCatarse = async function StartProgram(option) {
     var site = await OpenSite(linkCatarseLogin);
     var page = site.page;
     var browser = site.browser;
@@ -168,7 +168,9 @@ exports.StartCatarse = async function StartProgram() {
     else if (page.url() == "https://www.catarse.me/") {
         if (enableLogs) LogThis(colors.green, 'Page url is correct.');
         await page.goto(linkSubsReport);
-        await DownloadSubsList(page);
+        if (option == "DownloadList") await DownloadSubsList(page);
+        else if (option == "SendMessage") await sendMessage.CatarseSendMessage(page);
+        else throw new Error(`Parameter option: ${option} is invalid!`);
     }
     return { browser };
 }

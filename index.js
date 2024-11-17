@@ -28,10 +28,10 @@ async function InitBot() {
     // Atualmente o bot está dando `TimeoutError` com frequência, impedindo do bot conectar ao catarse.
     
     try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
-        var catarse = await entraCatarse.StartCatarse();
+        var catarse = await entraCatarse.StartCatarse("DownloadList");
         if (enableLogs) LogThis(colors.cyan, "Done with catarse.");
     } catch (error) {
-        logging.NewError("index.js > InitBot() > StartCatarse()", error);
+        logging.NewError("index.js > InitBot() > StartCatarse()", error.toString());
         console.log(error); // TODO: Assim é possível ver o erro, mas apenas no console.
     }
 
@@ -44,7 +44,7 @@ async function RepeatBot() {
         await subsList.UpdateSubsList();
         if (enableLogs) LogThis(colors.cyan, "Finished updating the subs list.");
     } catch (error) {
-        logging.NewError("index.js > RepeatBot() > UpdateSubsList()", error);
+        logging.NewError("index.js > RepeatBot() > UpdateSubsList()", error.toString());
         console.log(error); // TODO: Assim é possível ver o erro, mas apenas no console.
     }
 
@@ -52,7 +52,7 @@ async function RepeatBot() {
         await googleDrive.UpdateDrive();
         if (enableLogs) LogThis(colors.cyan, "Done with google drive.");
     } catch (error) {
-        logging.NewError("index.js > RepeatBot() > UpdateDrive()", error);
+        logging.NewError("index.js > RepeatBot() > UpdateDrive()", error.toString());
         console.log(error); // TODO: Assim é possível ver o erro, mas apenas no console.
     }
 }
@@ -68,7 +68,7 @@ async function ProgramCooldown(catarse) {
 
     try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
         await entraCatarse.DownloadCooldown(catarse.browser);
-    } catch (error) { logging.NewError("index.js > ProgramCooldown() > DownloadCooldown()", error); }
+    } catch (error) { logging.NewError("index.js > ProgramCooldown() > DownloadCooldown()", error.toString()); }
     await RepeatBot();
 
     ProgramCooldown(catarse);

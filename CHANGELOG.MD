@@ -35,6 +35,13 @@ ___
   - [x] Utilizar `try` e `catch` para pegar o erro sem crashar o bot.
   - [ ] Notificar o erro. (Discord no futuro, mas no momento pode ser um aviso por email talvez.)
 - [x] Alguns emails apesar de receberem o convite, não aceitam ou não têm o acesso ao drive, enchendo o console de mensagens repetidas.
+- [x] Adicionado uma lista de emails que devem ser verificados ao alterar o acesso no drive.
+- [x] Adicionado novo método que pega as informações do assinante pelo email dele.
+- [x] Removido a variável `isHeadless` do [entraCatarse.js](./js/entraCatarse.js).
+- [x] Iniciado o sistema para enviar mensagens para os assinantes do Catarse pelo próprio Catarse.
+  - [x] Criado o [sendMessageCatarse.js](./js/sendMessageCatarse.js) para abrigar todo o código relacionado.
+  - [x] `StartCatarse()` no [entraCatarse.js](./js/entraCatarse.js) agora precisa de um argumento que indique qual a função da vez.
+- [x] Adicionado um `.toString()` afim de registrar corretamente os erros no log.
 
 # Versão 1.8.7 - 2024-10-10
 **Corrigido**

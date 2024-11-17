@@ -155,13 +155,25 @@ function GetSubInfo(sub, debugShow) {
 	else if (isAnonymous == "sim") isAnonymous = true;
 
 	var consoleMsg =
-		`${publicName} (${email})\n` + `Assinatura: ${subTier}\n` + `Status: ${status}`;
+		`${publicName} (${email})\n`+
+		`Assinatura: ${subTier}\n` +
+		`Status: ${status}`;
 
 	if (debugShow && enableLogs) {
 		console.log("\n" + consoleMsg);
 	}
 
 	return { name: publicName, completeName, email, subTier, status, catarseId, isAnonymous };
+}
+
+function GetSubInfoFromEmail(email, debugShow) {
+
+	for (var sub in subsJson.read()) {
+		var search = subsJson.get(`${sub}.Email perfil Catarse`);
+		if (search == email) {
+			return GetSubInfo(sub, debugShow);
+		}
+	}
 }
 
 async function UpdateSubsList() {
@@ -194,4 +206,4 @@ async function UpdateSubTxtFile() {
 	fs.writeFileSync(txtFilePath, txtContent.toString());
 }
 
-module.exports = { GetSubInfo, UpdateSubsList, UpdateSubTxtFile }
+module.exports = { GetSubInfo, GetSubInfoFromEmail, UpdateSubsList, UpdateSubTxtFile }

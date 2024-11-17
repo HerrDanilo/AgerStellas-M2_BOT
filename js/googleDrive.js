@@ -151,7 +151,7 @@ async function BulkChangeSubsAccess() {
 	for (var sub in subsJson.read()) {
 		var subInfo = subsList.GetSubInfo(sub);
 		
-		if (overwatchList.includes(subInfo.email)) LogThis(colors.yellow, `${subInfo.email} has status of: ${subInfo.status}`);
+		if (overwatchList.includes(subInfo.email)) subsList.GetSubInfo(sub, true);
 		if (emailsToIgnore.includes(subInfo.email)) continue;
 
 		let hasActiveStatus = subInfo.status == "Ativa" || subInfo.status == "Cancelamento solicitado";

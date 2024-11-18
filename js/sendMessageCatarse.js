@@ -1,41 +1,40 @@
 //#region TESTES ANTERIORES
 
-//#region PRIMEIRA ETAPA
-const selector_loadMore = "#load-more";
-var loadMore = document.querySelector(selector_loadMore);
-var index = 0;
+// //#region PRIMEIRA ETAPA
+// const selector_loadMore = "#load-more";
+// var loadMore = document.querySelector(selector_loadMore);
+// var index = 0;
 
-while (loadMore) {
-    // Wait some time before doing all again.
-    index++;
-    loadMore.click();
-    loadMore = document.querySelector("#load-more");
-}
-//#endregion
+// while (loadMore) {
+//     // Wait some time before doing all again.
+//     index++;
+//     loadMore.click();
+//     loadMore = document.querySelector("#load-more");
+// }
+// //#endregion
 
-//#region SEGUNDA ETAPA
-const selector_subsList = "#app > div > div.before-footer.bg-gray.section > div.w-container > div.u-marginbottom-60 > div.fontsize-small";
-var subsList = document.querySelector(selector_subsList);
+// //#region SEGUNDA ETAPA
+// const selector_subsList = "#app > div > div.before-footer.bg-gray.section > div.w-container > div.u-marginbottom-60 > div.fontsize-small";
+// var subsList = document.querySelector(selector_subsList);
 
-for (i = 1; i <= subsList.children.length; i++) {
-    var subStatus = CheckSubStatus(i);
-    if (subStatus.includes("Cancelada") || subStatus.includes("Inativa")) {
-        var email = GetEmailFromCatarseProfile(i);
-        // Pegar as informações do sub com o `subsList.GetSubInfo()`;
-    }
-}
-//#endregion
+// for (i = 1; i <= subsList.children.length; i++) {
+//     var subStatus = CheckSubStatus(i);
+//     if (subStatus.includes("Cancelada") || subStatus.includes("Inativa")) {
+//         var email = GetEmailFromCatarseProfile(i);
+//         // Pegar as informações do sub com o `subsList.GetSubInfo()`;
+//     }
+// }
+// //#endregion
 
-function CheckSubStatus(index) {
-    const selector = `#app > div > div.before-footer.bg-gray.section > div.w-container > div.u-marginbottom-60 > div.fontsize-small > div:nth-child(${index}) > div.card.card-clickable > div > div:nth-child(6)`;
-    var subStatus = document.querySelector(selector);
-    return subStatus.innerText;
-}
+// function CheckSubStatus(index) {
+//     const selector = `#app > div > div.before-footer.bg-gray.section > div.w-container > div.u-marginbottom-60 > div.fontsize-small > div:nth-child(${index}) > div.card.card-clickable > div > div:nth-child(6)`;
+//     var subStatus = document.querySelector(selector);
+//     return subStatus.innerText;
+// }
 
-//#endregion
+// //#endregion
 
 const fs = require('fs');
-const subsList = require('./subsList.js');
 
 //#region SEND MESSAGE THROUGH CATARSE
 async function CatarseSendMessage(page) {

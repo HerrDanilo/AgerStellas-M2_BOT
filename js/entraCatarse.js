@@ -139,7 +139,6 @@ async function SetDownloadBehaviour(page) {
 async function SomethingWentWrong(browser, page) {
     var screenshotName = "Error_" + new Date();
     var screenshotPath = path.resolve('../screenshots');
-    LogThis(colors.red, "Algo deu errado aqui ó!");
     logging.NewError("entraCatarse.js > SomethingWentWrong()", `Houve um erro ao logar no catarse, verifique a print para mais informações.\n ${screenshotName}`);
     await page.screenshot({ path: `${screenshotPath}/${screenshotName}` });
     browser.close();

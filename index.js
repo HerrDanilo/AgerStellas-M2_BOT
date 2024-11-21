@@ -32,7 +32,6 @@ async function InitBot() {
         if (enableLogs) LogThis(colors.cyan, "Done with catarse.");
     } catch (error) {
         logging.NewError("index.js > InitBot() > StartCatarse()", error);
-        console.log(error); // TODO: Assim é possível ver o erro, mas apenas no console.
     }
 
     await RepeatBot();
@@ -45,7 +44,6 @@ async function RepeatBot() {
         if (enableLogs) LogThis(colors.cyan, "Finished updating the subs list.");
     } catch (error) {
         logging.NewError("index.js > RepeatBot() > UpdateSubsList()", error);
-        console.log(error); // TODO: Assim é possível ver o erro, mas apenas no console.
     }
 
     try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
@@ -53,7 +51,6 @@ async function RepeatBot() {
         if (enableLogs) LogThis(colors.cyan, "Done with google drive.");
     } catch (error) {
         logging.NewError("index.js > RepeatBot() > UpdateDrive()", error);
-        console.log(error); // TODO: Assim é possível ver o erro, mas apenas no console.
     }
 }
 

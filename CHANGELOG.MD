@@ -8,6 +8,7 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
+- [Versão 1.9.0 - 2024-11-21](#versão-190---2024-11-21)
 - [Versão 1.8.7 - 2024-10-10](#versão-187---2024-10-10)
 - [Versão 1.8.6 - 2024-10-02](#versão-186---2024-10-02)
 - [Versão 1.8.5 - 2024-09-23](#versão-185---2024-09-23)
@@ -31,17 +32,25 @@ ___
 # Futuras versões
 
 - [ ] Notificar quando algum erro ocorre:
-  - [ ] Os `try&catch` no [index.js](./index.js) não costuma retornar um erro de verdade, só o caminho mas sem uma mensagem, nem título do erro.
   - [x] Utilizar `try` e `catch` para pegar o erro sem crashar o bot.
   - [ ] Notificar o erro. (Discord no futuro, mas no momento pode ser um aviso por email talvez.)
-- [x] Alguns emails apesar de receberem o convite, não aceitam ou não têm o acesso ao drive, enchendo o console de mensagens repetidas.
-- [x] Adicionado uma lista de emails que devem ser verificados ao alterar o acesso no drive.
-- [x] Adicionado novo método que pega as informações do assinante pelo email dele.
-- [x] Removido a variável `isHeadless` do [entraCatarse.js](./js/entraCatarse.js).
-- [x] Iniciado o sistema para enviar mensagens para os assinantes do Catarse pelo próprio Catarse.
-  - [x] Criado o [sendMessageCatarse.js](./js/sendMessageCatarse.js) para abrigar todo o código relacionado.
-  - [x] `StartCatarse()` no [entraCatarse.js](./js/entraCatarse.js) agora precisa de um argumento que indique qual a função da vez.
-- [x] Adicionado um `.toString()` afim de registrar corretamente os erros no log.
+
+# Versão 1.9.0 - 2024-11-21
+**Adicionado**
+- Alguns emails apesar de receberem o convite, não aceitam ou não têm o acesso ao drive, enchendo o console de mensagens repetidas.
+  - Esses emails são pulados na hora de alterar o acesso no Drive.
+- Criada uma lista de emails a serem verificados quando alterar o acesso no Drive.
+- Adicionado novo método que pega as informações do assinante pelo email dele.
+  - `subsList.GetSubInfoFromEmail(email, debugShow);`
+- Iniciado o sistema para enviar mensagens para os assinantes do Catarse pelo próprio Catarse.
+  - Criado o [sendMessageCatarse.js](./js/sendMessageCatarse.js) para abrigar todo o código relacionado.
+  - `StartCatarse()` no [entraCatarse.js](./js/entraCatarse.js) agora precisa de um argumento que indique qual a função da vez.
+
+**Modificado**
+- Foi removida a variável `isHeadless` do [entraCatarse.js](./js/entraCatarse.js).
+
+**Corrigido**
+- Afim de registrar corretamente os erros no log, foi adicionado um `.toString()` aos erros direto no `logging.NewError()`.
 
 # Versão 1.8.7 - 2024-10-10
 **Corrigido**

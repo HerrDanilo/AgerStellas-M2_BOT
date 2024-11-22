@@ -137,12 +137,7 @@ function GetLastPayment(sub) {
 //#endregion
 
 function GetSubInfo(sub, debugShow) {
-	/* 
-	.Nome público (.Email perfil Catarse)
-	Assinatura: .Título da recompensa 
-	Status: .Status da Assinatura
-	*/
-
+	
 	var publicName = subsJson.get(`${sub}.Nome público`);
 	var completeName = subsJson.get(`${sub}.Nome completo`);
 	if (publicName === "") publicName = completeName;
@@ -153,7 +148,12 @@ function GetSubInfo(sub, debugShow) {
 	var isAnonymous = subsJson.get(`${sub}.Anônimo`);
 	if (isAnonymous == "não") isAnonymous = false;
 	else if (isAnonymous == "sim") isAnonymous = true;
-
+	
+	/* 
+	.Nome público (.Email perfil Catarse)
+	Assinatura: .Título da recompensa 
+	Status: .Status da Assinatura
+	*/
 	var consoleMsg =
 		`${publicName} (${email})\n`+
 		`Assinatura: ${subTier}\n` +
@@ -167,10 +167,18 @@ function GetSubInfo(sub, debugShow) {
 }
 
 function GetSubInfoFromEmail(email, debugShow) {
-
 	for (var sub in subsJson.read()) {
 		var search = subsJson.get(`${sub}.Email perfil Catarse`);
 		if (search == email) {
+			return GetSubInfo(sub, debugShow);
+		}
+	}
+}
+
+function GetSubInfoFromCatarseID(catarseID, debugShow) {
+	for (var sub in subsJson.read()) {
+		var search = subsJson.get(`${sub}.ID do usuário`);
+		if (search == catarseID) {
 			return GetSubInfo(sub, debugShow);
 		}
 	}

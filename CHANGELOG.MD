@@ -8,6 +8,7 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
+- [Versão 1.9.2 - 2024-11-22](#versão-192---2024-11-22)
 - [Versão 1.9.1 - 2024-11-21](#versão-191---2024-11-21)
 - [Versão 1.9.0 - 2024-11-21](#versão-190---2024-11-21)
 - [Versão 1.8.7 - 2024-10-10](#versão-187---2024-10-10)
@@ -35,6 +36,10 @@ ___
 - [ ] Notificar quando algum erro ocorre:
   - [x] Utilizar `try` e `catch` para pegar o erro sem crashar o bot.
   - [ ] Notificar o erro. (Discord no futuro, mas no momento pode ser um aviso por email talvez.)
+
+# Versão 1.9.2 - 2024-11-22
+**Corrigido**
+- O `console.trace()` no [logging.js](./js/logging.js) dava o caminho para o `logging.NewError()` ao invés de onde o erro aconteceu.
 
 # Versão 1.9.1 - 2024-11-21
 **Corrigido**

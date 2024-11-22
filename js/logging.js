@@ -139,8 +139,7 @@ function NewError(where, error) {
 	loggingJson.set(`${currentError}.${errorKeys.time}`, GetTime());
 	loggingJson.set(`${currentError}.${errorKeys.where}`, where ? where : "no path passed.");
 	loggingJson.set(`${currentError}.${errorKeys.message}`, error ? errorString : "no error specified.");
-	LogThis(colors.red, errorString);
-	console.trace();
+	LogThis(colors.red, error.stack);
 	loggingJson.set(key_errorAmount, ++value_errorAmount);
 	loggingJson.save();
 }

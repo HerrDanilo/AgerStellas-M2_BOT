@@ -27,7 +27,7 @@ async function InitBot() {
     // FIXME: Quando o `StartCatarse()` dá erro, o bot deveria parar e tentar novamente.
     // Atualmente o bot está dando `TimeoutError` com frequência, impedindo do bot conectar ao catarse.
     
-    try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
+    try {
         var catarse = await entraCatarse.StartCatarse("DownloadList");
         if (enableLogs) LogThis(colors.cyan, "Done with catarse.");
     } catch (error) {
@@ -39,14 +39,14 @@ async function InitBot() {
 }
 
 async function RepeatBot() {
-    try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
+    try {
         await subsList.UpdateSubsList();
         if (enableLogs) LogThis(colors.cyan, "Finished updating the subs list.");
     } catch (error) {
         logging.NewError("index.js > RepeatBot() > UpdateSubsList()", error);
     }
 
-    try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
+    try {
         await googleDrive.UpdateDrive();
         if (enableLogs) LogThis(colors.cyan, "Done with google drive.");
     } catch (error) {
@@ -63,7 +63,7 @@ async function ProgramCooldown(catarse) {
     if (enableLogs) LogThis(colors.cyan, "Waking up...");
     SaveLastRuntime();
 
-    try { // FIXME: Esse `catch` não costuma dar um erro de retorno...
+    try {
         await entraCatarse.DownloadCooldown(catarse.browser);
     } catch (error) { logging.NewError("index.js > ProgramCooldown() > DownloadCooldown()", error); }
     await RepeatBot();

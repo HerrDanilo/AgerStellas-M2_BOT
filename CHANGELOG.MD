@@ -8,6 +8,7 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
+- [Versão 1.10.1 - 2024-11-27](#versão-1101---2024-11-27)
 - [Versão 1.10.0 - 2024-11-22](#versão-1100---2024-11-22)
 - [Versão 1.9.2 - 2024-11-22](#versão-192---2024-11-22)
 - [Versão 1.9.1 - 2024-11-21](#versão-191---2024-11-21)
@@ -37,6 +38,11 @@ ___
 - [ ] Notificar quando algum erro ocorre:
   - [x] Utilizar `try` e `catch` para pegar o erro sem crashar o bot.
   - [ ] Notificar o erro. (Discord no futuro, mas no momento pode ser um aviso por email talvez.)
+
+# Versão 1.10.1 - 2024-11-27
+**Modificado**
+- [subsList.js](./js/subsList.js):
+  - Agora o delay entre remover e renomear o novo arquivo CSV só ocorre caso consiga remover o antigo arquivo.
 
 # Versão 1.10.0 - 2024-11-22
 **Adicionado**

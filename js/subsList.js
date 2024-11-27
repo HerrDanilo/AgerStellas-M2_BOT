@@ -24,8 +24,9 @@ var enableLogs = configsJson.get('enableLogs');
 
 //#region CSV => JSON
 async function CSVToJson() {
-	await RemoveOldCSV();
-	await Delay(2.5, enableLogs);
+	if (await RemoveOldCSV()) {
+		await Delay(2.5, enableLogs);
+	}
 	RenameCSV();
 
 	await TransformCsvIntoJson();
@@ -52,7 +53,7 @@ async function RemoveOldCSV() {
 
 async function TransformCsvIntoJson() {
 	if (enableLogs) LogThis(colors.magenta, 'Transforming Csv file to Json.');
-	
+
 	let index = 0;
 
 	subsJson.empty();
@@ -137,7 +138,7 @@ function GetLastPayment(sub) {
 //#endregion
 
 function GetSubInfo(sub, debugShow) {
-	
+
 	var publicName = subsJson.get(`${sub}.Nome público`);
 	var completeName = subsJson.get(`${sub}.Nome completo`);
 	if (publicName === "") publicName = completeName;
@@ -148,14 +149,14 @@ function GetSubInfo(sub, debugShow) {
 	var isAnonymous = subsJson.get(`${sub}.Anônimo`);
 	if (isAnonymous == "não") isAnonymous = false;
 	else if (isAnonymous == "sim") isAnonymous = true;
-	
+
 	/* 
 	.Nome público (.Email perfil Catarse)
 	Assinatura: .Título da recompensa 
 	Status: .Status da Assinatura
 	*/
 	var consoleMsg =
-		`${publicName} (${email})\n`+
+		`${publicName} (${email})\n` +
 		`Assinatura: ${subTier}\n` +
 		`Status: ${status}`;
 

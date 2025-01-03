@@ -148,13 +148,46 @@ async function BulkChangeSubsAccess() {
 	for (let i = 0; i < configsJson.get("overwatchList.count"); i++) {
 		overwatchList.push(configsJson.get(`overwatchList.${i}`));
 	}
+	//#region Pequena gambiarra pra liberar acessos excepcionais a assinantes.
+	function GetTodayDate() {
+		var year = new Date().getFullYear();
+		var month = new Date().getMonth();
+		var day = new Date().getDate();
+		month++;
+
+		if (month < 10) month = `0${month}`;
+		if (day < 10) day = `0${day}`;
+
+		return new Date(`${year}-${month}-${day}T10:00:00`);
+	}
+	let subsExceptionsEmail = [];
+	let subsExceptionsFinalDate = [];
+	for (let i = 0; i < configsJson.get("subsExceptions.count"); i++) {
+		subsExceptionsEmail.push(configsJson.get(`subsExceptions.${i}.email`));
+		subsExceptionsFinalDate.push(new Date(configsJson.get(`subsExceptions.${i}.finalDate`)));
+	}
+	//#endregion
+
 	for (var sub in subsJson.read()) {
 		var subInfo = subsList.GetSubInfo(sub);
-		
+
 		if (overwatchList.includes(subInfo.email)) subsList.GetSubInfo(sub, true);
 		if (emailsToIgnore.includes(subInfo.email)) continue;
 
 		let hasActiveStatus = subInfo.status == "Ativa" || subInfo.status == "Cancelamento solicitado";
+
+		if (subsExceptionsEmail.includes(subInfo.email)) {
+			_index = subsExceptionsEmail.indexOf(subInfo.email);
+			if (subsExceptionsFinalDate[_index] > GetTodayDate()) hasActiveStatus = true;
+			else hasActiveStatus = false;
+
+			let logColor;
+			if (hasActiveStatus) logColor = "\x1b[32m";
+			else logColor = "\x1b[31m";
+
+			if (enableLogs) console.log(`Exception: ${logColor}${hasActiveStatus}\x1b[0m`);
+			subsList.GetSubInfo(sub, true);
+		}
 
 		await RemoveAccessFromAllFolders(subInfo, hasActiveStatus);
 
@@ -168,9 +201,9 @@ async function RemoveAccessFromAllFolders(subInfo, isActive) {
 		var folder_ID = configsJson.get(`folders.${folder}.id`);
 
 		if (isActive && (folder == "Recompensas Gerais" ||
-						 folder == subInfo.subTier ||
-						 folder_ID == configsJson.get(`folders.${subInfo.subTier}.id`)
-						)) continue;
+			folder == subInfo.subTier ||
+			folder_ID == configsJson.get(`folders.${subInfo.subTier}.id`)
+		)) continue;
 
 		var hasAccess = await UserHasAccessToFolder(subInfo, folder_ID);
 

@@ -24,6 +24,17 @@ async function InitBot() {
 
     SaveLastRuntime();
 
+    // TÁ DANDO CAPTCHA NO SITE DO CATARSE, PROVAVELMENTE POR QUE ELES VÃO MUDAR O SITE EM BREVE.
+    if (process.argv[2] == "gambiarra") {
+        LogThis(colors.yellow, "Entering Gambiarra mode!");
+        logging.UpdateCurrentRuntime(logging.runtimeKeys.downloadAttempts, null);
+        await RepeatBot();
+        logging.FinishCurrentRuntime();
+        await Delay(15, enableLogs);
+        process.exit();
+    }
+    else process.exit();
+
     // FIXME: Quando o `StartCatarse()` dá erro, o bot deveria parar e tentar novamente.
     // Atualmente o bot está dando `TimeoutError` com frequência, impedindo do bot conectar ao catarse.
     

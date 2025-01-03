@@ -1,11 +1,12 @@
 {
   "name": "agerstellas-m2_bot",
-  "version": "1.10.1",
+  "version": "1.11.0",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "lastRuntime": "node getLastRuntime.js",
-    "test": "node .\\DONT_GIT\\testeDoBot.js"
+    "test": "node .\\DONT_GIT\\testeDoBot.js",
+    "gambiarra": "node index.js gambiarra"
   },
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.0",

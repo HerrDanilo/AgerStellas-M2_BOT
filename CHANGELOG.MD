@@ -8,6 +8,7 @@ O formato é baseado no [Mantenha um Changelog](https://keepachangelog.com/pt-BR
 e este projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - [Futuras versões](#futuras-versões)
+- [Versão 1.11.0 - 2025-01-03](#versão-1110---2025-01-03)
 - [Versão 1.10.1 - 2024-11-27](#versão-1101---2024-11-27)
 - [Versão 1.10.0 - 2024-11-22](#versão-1100---2024-11-22)
 - [Versão 1.9.2 - 2024-11-22](#versão-192---2024-11-22)
@@ -38,6 +39,13 @@ ___
 - [ ] Notificar quando algum erro ocorre:
   - [x] Utilizar `try` e `catch` para pegar o erro sem crashar o bot.
   - [ ] Notificar o erro. (Discord no futuro, mas no momento pode ser um aviso por email talvez.)
+
+# Versão 1.11.0 - 2025-01-03
+**Adicionado**
+- [googleDrive](./js/googleDrive.js):
+  - Nova lista de exceções para alguns asssinantes continuarem tendo acesso mesmo após a assinatura no Catarse estar expirada.
+- [index](index.js):
+  - Criada uma gambiarra para não entrar no site do Catarse por conta de captcha impedindo o login.
 
 # Versão 1.10.1 - 2024-11-27
 **Modificado**
